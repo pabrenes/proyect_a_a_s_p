@@ -21,4 +21,8 @@ public class Kakuro {
         int total = 0;
         return total;
     }
+
+    private int nuevaFuncion () {
+        return 15;
+    }
 }
