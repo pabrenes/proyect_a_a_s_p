@@ -26,8 +26,8 @@ public class Kakuro {
         return 15;
     }
 
-    private int nuevaFuncionChino () {
-        return 15123123;
+    private int FuncionSashaGray () {
+        return 696969;
     }
 
 
