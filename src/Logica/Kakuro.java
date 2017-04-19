@@ -25,4 +25,10 @@ public class Kakuro {
     private int nuevaFuncion () {
         return 15;
     }
+
+    private int nuevaFuncionChino () {
+        return 15;
+    }
+
+
 }
