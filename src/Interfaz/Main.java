@@ -12,15 +12,6 @@ import javafx.stage.Stage;
  */
 
 
-/**
-
- * SD
- * ASD
- * ASDASDASDASDASDASDAS
- * DASDASDASDASDASDASD
- *
- */
-
 public class Main extends Application{
 
     @Override

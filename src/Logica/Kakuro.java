@@ -1,9 +1,10 @@
 package Logica;
 
 /**
- * Created by Pablo Brenes - 2016250460
+ * Created by Pablo Brenes ft Jeison E. Samudio
  * 13 abr 2017.
  */
+
 public class Kakuro {
 
     int[][] tablero;
@@ -22,13 +23,7 @@ public class Kakuro {
         return total;
     }
 
-    private int nuevaFuncion () {
-        return 15;
-    }
 
-    private int FuncionSashaGray () {
-        return 696969;
-    }
 
 
 }
