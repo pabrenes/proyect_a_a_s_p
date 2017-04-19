@@ -10,8 +10,6 @@ import javafx.stage.Stage;
  * Created by Pablo Brenes - 2016250460
  * 11 abr 2017.
  */
-
-
 public class Main extends Application{
 
     @Override

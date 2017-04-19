@@ -23,7 +23,4 @@ public class Kakuro {
         return total;
     }
 
-
-
-
 }
