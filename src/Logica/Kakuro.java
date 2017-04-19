@@ -21,8 +21,4 @@ public class Kakuro {
         int total = 0;
         return total;
     }
-
-    private void print(String imprimir){
-        System.out.print(imprimir);
-    }
 }
