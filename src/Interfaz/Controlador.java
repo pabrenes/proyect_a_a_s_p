@@ -114,8 +114,8 @@ public class Controlador implements Initializable {
     }
 
     private void setLine (int fila, int columna) {
-        double inicioX = 10.0 + 8.0 + (42.0 * columna);
-        double inicioY = 10.0 + 8.0 + (42.0 * fila);
+        double inicioX = 10.0 + 6.0 + (42.0 * columna);
+        double inicioY = 10.0 + 6.0 + (42.0 * fila);
         if (columna < 8)
             inicioX -= columna;
         else
@@ -132,8 +132,8 @@ public class Controlador implements Initializable {
         Line linea = new Line();
         linea.setStartX(inicioX);
         linea.setStartY(inicioY);
-        linea.setEndX(inicioX + 26);
-        linea.setEndY(inicioY + 26);
+        linea.setEndX(inicioX + 30);
+        linea.setEndY(inicioY + 30);
         linea.setStrokeWidth(1.0);
         return new Group(linea);
     }
