@@ -1,9 +1,9 @@
 package Interfaz;
 
+import Logica.Kakuro;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -14,7 +14,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -37,22 +36,7 @@ public class Controlador implements Initializable {
     Button resolver;
 
     //Atributos para clase
-    int[][] tableroLogico = {
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 1, 1, 7, 7, 8, 9, 2, 6, 5, 1, 1, 1},
-            {0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0},
-            {0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0},
-            {0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0},
-            {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0},
-            {0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-            {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    };
+    Kakuro kakuro;
 
     @Override
     public void initialize(URL fxmlFileLocation, ResourceBundle resources){
@@ -85,7 +69,7 @@ public class Controlador implements Initializable {
     private VBox construirCasilla(int fila, int columna) {
         VBox contenedor = new VBox();
         contenedor.setStyle("-fx-border-color:#000000");
-        if (tableroLogico[fila][columna] == 0) {
+        if (kakuro.getTablero()[fila][columna] == -1) {
             Label casillaSup = new Label(String.valueOf(fila) + "  ");
             casillaSup.setAlignment(Pos.CENTER_RIGHT);
             casillaSup.setTextFill(Color.web("#FFFFFF"));
@@ -102,7 +86,7 @@ public class Controlador implements Initializable {
             return contenedor;
         }
         else {
-            Label casilla = new Label(String.valueOf(tableroLogico[fila][columna]));
+            Label casilla = new Label(String.valueOf(kakuro.getTablero()[fila][columna]));
             casilla.setAlignment(Pos.CENTER);
             casilla.setPrefSize(42.0, 42.0);
             casilla.setFont(new Font("Cambria Math", 20));

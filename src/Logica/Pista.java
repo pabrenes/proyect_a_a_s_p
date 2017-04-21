@@ -14,4 +14,16 @@ public class Pista {
         abajo = 0;
     }
 
+    public String getStringDerecha() {
+        if (derecha != 0)
+            return "" + derecha;
+        return "";
+    }
+
+    public String getStringAbajo() {
+        if (abajo != 0)
+            return "" + abajo;
+        return "";
+    }
+
 }

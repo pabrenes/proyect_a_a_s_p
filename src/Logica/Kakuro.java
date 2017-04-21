@@ -7,8 +7,8 @@ package Logica;
 
 public class Kakuro {
 
-    int[][] tablero;
-    Pista[][] pista;
+    private int[][] tablero;
+    private Pista[][] pista;
 
     static int[] numeroMaximo = {9, 17, 24, 30, 35, 39, 42, 44, 45};
     static int[] numeroMinimo = {1, 3, 6, 10, 15, 21, 28, 36, 45};
@@ -23,4 +23,11 @@ public class Kakuro {
         return total;
     }
 
+    public int[][] getTablero() {
+        return tablero;
+    }
+
+    public Pista[][] getPista() {
+        return pista;
+    }
 }
