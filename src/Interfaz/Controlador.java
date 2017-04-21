@@ -114,9 +114,13 @@ public class Controlador implements Initializable {
     }
 
     private void setLine (int fila, int columna) {
-        Group line = createLine(
-                10.0 + 8.0 + (42.0 * columna),
-                10.0 + 8.0 + (42.0 * fila));
+        double inicioX = 10.0 + 8.0 + (42.0 * columna);
+        if (columna < 8)
+            inicioX -= columna;
+        else
+            inicioX -= 8;
+        double inicioY = 10.0 + 8.0 + (42.0 * fila);
+        Group line = createLine(inicioX, inicioY);
         lines.add(line);
     }
 
