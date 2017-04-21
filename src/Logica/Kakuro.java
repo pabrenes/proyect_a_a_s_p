@@ -1,8 +1,9 @@
 package Logica;
 
 /**
- * Created by Pablo Brenes ft Jeison E. Samudio
- * 13 abr 2017.
+ * Created by   Pablo Brenes    - 2016250460
+ *              Jeison Esquivel - 2013018886
+ * 14 abr 2017.
  */
 
 public class Kakuro {
@@ -22,7 +23,7 @@ public class Kakuro {
         pista[fila][columna] = new Pista(derecha, abajo);
     }
 
-    private int maxParaCasillas (int cantCasillas) {
+    private int maxParaCasillas(int cantCasillas) {
         int total = 0;
         return total;
     }

@@ -1,9 +1,11 @@
 package Logica;
 
 /**
- * Created by Pablo Brenes - 2016250460
+ * Created by   Pablo Brenes    - 2016250460
+ *              Jeison Esquivel - 2013018886
  * 14 abr 2017.
  */
+
 public class Pista {
 
     private int derecha;

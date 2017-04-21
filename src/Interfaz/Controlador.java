@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
- * Created by Pablo Brenes - 2016250460
- * 11 abr 2017.
+ * Created by   Pablo Brenes    - 2016250460
+ *              Jeison Esquivel - 2013018886
+ * 14 abr 2017.
  */
 
 public class Controlador implements Initializable {
@@ -59,7 +60,7 @@ public class Controlador implements Initializable {
 
     }
 
-    private void construirTablero () {
+    private void construirTablero() {
         tablero.getChildren().clear();
         clearLines();
         for (int i = 0; i < 14; i++) {
@@ -70,14 +71,14 @@ public class Controlador implements Initializable {
         addLines();
     }
 
-    private VBox construirCasilla (int fila, int columna) {
+    private VBox construirCasilla(int fila, int columna) {
         VBox contenedor = new VBox();
         int valor = kakuro.getTablero()[fila][columna];
         switch (valor) {
             case -2:
                 Label cajaNegra = new Label();
                 cajaNegra.setAlignment(Pos.CENTER_RIGHT);
-                cajaNegra.setStyle("-fx-background-color:#434343");
+                cajaNegra.setStyle("-fx-background-color:#595959");
                 cajaNegra.setPrefSize(42.0, 42.0);
                 contenedor.getChildren().addAll(cajaNegra);
                 break;
@@ -85,13 +86,13 @@ public class Controlador implements Initializable {
                 Label casillaSup = new Label(kakuro.getPista()[fila][columna].getStringDerecha() + "  ");
                 casillaSup.setAlignment(Pos.CENTER_RIGHT);
                 casillaSup.setTextFill(Color.web("#FFFFFF"));
-                casillaSup.setStyle("-fx-background-color:#434343");
+                casillaSup.setStyle("-fx-background-color:#595959");
                 casillaSup.setPrefSize(42.0, 21.0);
                 casillaSup.setWrapText(true);
                 Label casillaInf = new Label("  " + kakuro.getPista()[fila][columna].getStringAbajo());
                 casillaInf.setAlignment(Pos.CENTER_LEFT);
                 casillaInf.setTextFill(Color.web("#FFFFFF"));
-                casillaInf.setStyle("-fx-background-color:#434343");
+                casillaInf.setStyle("-fx-background-color:#595959");
                 casillaInf.setPrefSize(42.0, 21.0);
                 casillaSup.setWrapText(true);
                 contenedor.getChildren().addAll(casillaSup, casillaInf);
@@ -113,7 +114,7 @@ public class Controlador implements Initializable {
         return contenedor;
     }
 
-    private void setLine (int fila, int columna) {
+    private void setLine(int fila, int columna) {
         double inicioX = 10.0 + 6.0 + (42.0 * columna);
         double inicioY = 10.0 + 6.0 + (42.0 * fila);
         if (columna < 8)
@@ -128,7 +129,7 @@ public class Controlador implements Initializable {
         lines.add(line);
     }
 
-    private Group createLine (double inicioX, double inicioY) {
+    private Group createLine(double inicioX, double inicioY) {
         Line linea = new Line();
         linea.setStartX(inicioX);
         linea.setStartY(inicioY);
@@ -138,19 +139,19 @@ public class Controlador implements Initializable {
         return new Group(linea);
     }
 
-    private void clearLines () {
+    private void clearLines() {
         for (Group linea : lines) {
             panel.getChildren().remove(linea);
         }
     }
 
-    private void addLines () {
+    private void addLines() {
         for (Group linea : lines) {
             panel.getChildren().add(linea);
         }
     }
 
-    private void setKakuroPrueba () {
+    private void setKakuroPrueba() {
         int[][] tablero = {
                 {-2, -1, -1, -2, -2, -1, -1, -2, -2, -2, -1, -1, -2, -2},
                 {-1,  0,  0, -2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -2},
