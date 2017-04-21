@@ -69,30 +69,38 @@ public class Controlador implements Initializable {
     private VBox construirCasilla(int fila, int columna) {
         VBox contenedor = new VBox();
         contenedor.setStyle("-fx-border-color:#000000");
-        if (kakuro.getTablero()[fila][columna] == -1) {
-            Label casillaSup = new Label(String.valueOf(fila) + "  ");
-            casillaSup.setAlignment(Pos.CENTER_RIGHT);
-            casillaSup.setTextFill(Color.web("#FFFFFF"));
-            casillaSup.setStyle("-fx-background-color:#434343");
-            casillaSup.setPrefSize(42.0, 21.0);
-            casillaSup.setWrapText(true);
-            Label casillaInf = new Label("  " + String.valueOf(columna));
-            casillaInf.setAlignment(Pos.CENTER_LEFT);
-            casillaInf.setTextFill(Color.web("#FFFFFF"));
-            casillaInf.setStyle("-fx-background-color:#434343");
-            casillaInf.setPrefSize(42.0, 21.0);
-            casillaSup.setWrapText(true);
-            contenedor.getChildren().addAll(casillaSup, casillaInf);
-            return contenedor;
+        int valor = kakuro.getTablero()[fila][columna];
+        switch (valor) {
+            case -2:
+                Label cajaNegra = new Label();
+                cajaNegra.setAlignment(Pos.CENTER_RIGHT);
+                cajaNegra.setStyle("-fx-background-color:#434343");
+                cajaNegra.setPrefSize(42.0, 21.0);
+                break;
+            case -1:
+                Label casillaSup = new Label(kakuro.getPista()[fila][columna].getStringDerecha() + "  ");
+                casillaSup.setAlignment(Pos.CENTER_RIGHT);
+                casillaSup.setTextFill(Color.web("#FFFFFF"));
+                casillaSup.setStyle("-fx-background-color:#434343");
+                casillaSup.setPrefSize(42.0, 21.0);
+                casillaSup.setWrapText(true);
+                Label casillaInf = new Label("  " + kakuro.getPista()[fila][columna].getStringAbajo());
+                casillaInf.setAlignment(Pos.CENTER_LEFT);
+                casillaInf.setTextFill(Color.web("#FFFFFF"));
+                casillaInf.setStyle("-fx-background-color:#434343");
+                casillaInf.setPrefSize(42.0, 21.0);
+                casillaSup.setWrapText(true);
+                contenedor.getChildren().addAll(casillaSup, casillaInf);
+                break;
+            default:
+                Label casilla = new Label(String.valueOf(kakuro.getTablero()[fila][columna]));
+                casilla.setAlignment(Pos.CENTER);
+                casilla.setPrefSize(42.0, 42.0);
+                casilla.setFont(new Font("Cambria Math", 20));
+                contenedor.getChildren().addAll(casilla);
+                break;
         }
-        else {
-            Label casilla = new Label(String.valueOf(kakuro.getTablero()[fila][columna]));
-            casilla.setAlignment(Pos.CENTER);
-            casilla.setPrefSize(42.0, 42.0);
-            casilla.setFont(new Font("Cambria Math", 20));
-            contenedor.getChildren().addAll(casilla);
-            return contenedor;
-        }
+        return contenedor;
     }
 
     private void setLine (int fila, int columna) {

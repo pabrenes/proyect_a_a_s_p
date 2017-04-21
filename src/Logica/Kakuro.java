@@ -18,7 +18,11 @@ public class Kakuro {
         pista = new Pista[14][14];
     }
 
-    private int maxParaCasillas (int cantCasillas){
+    public void ingresarPista (int fila, int columna, int derecha, int abajo) {
+        pista[fila][columna] = new Pista(derecha, abajo);
+    }
+
+    private int maxParaCasillas (int cantCasillas) {
         int total = 0;
         return total;
     }

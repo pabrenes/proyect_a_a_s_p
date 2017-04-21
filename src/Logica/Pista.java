@@ -9,9 +9,9 @@ public class Pista {
     int derecha;
     int abajo;
 
-    public Pista() {
-        derecha = 0;
-        abajo = 0;
+    public Pista(int derecha, int abajo) {
+        this.derecha = derecha;
+        this.abajo = abajo;
     }
 
     public String getStringDerecha() {
