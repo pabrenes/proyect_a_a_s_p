@@ -34,4 +34,8 @@ public class Kakuro {
     public Pista[][] getPista() {
         return pista;
     }
+
+    public void setTablero(int[][] tablero) {
+        this.tablero = tablero;
+    }
 }

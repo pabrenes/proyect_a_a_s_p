@@ -6,8 +6,8 @@ package Logica;
  */
 public class Pista {
 
-    int derecha;
-    int abajo;
+    private int derecha;
+    private int abajo;
 
     public Pista(int derecha, int abajo) {
         this.derecha = derecha;
