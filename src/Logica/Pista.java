@@ -1,12 +1,14 @@
 package Logica;
 
+import java.io.Serializable;
+
 /**
  * Created by   Pablo Brenes    - 2016250460
  *              Jeison Esquivel - 2013018886
  * 14 abr 2017.
  */
 
-public class Pista {
+public class Pista implements Serializable {
 
     private int derecha;
     private int abajo;

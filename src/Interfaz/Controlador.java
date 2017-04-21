@@ -50,6 +50,12 @@ public class Controlador implements Initializable {
 
         setKakuroPrueba();
 
+        kakuro.guardarKakuro("Kakuro.dat");
+
+        kakuro = new Kakuro();
+
+        kakuro.cargarKakuro("Kakuro.dat");
+
         construirTablero();
 
         guardar.setOnAction(event -> System.out.println("Guardando..."));
