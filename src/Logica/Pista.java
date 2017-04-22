@@ -18,6 +18,14 @@ public class Pista implements Serializable {
         this.abajo = abajo;
     }
 
+    public int getDerecha() {
+        return derecha;
+    }
+
+    public int getAbajo() {
+        return abajo;
+    }
+
     public String getStringDerecha() {
         if (derecha != 0)
             return "" + derecha;
