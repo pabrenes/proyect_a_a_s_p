@@ -50,7 +50,6 @@ public class Kakuro implements Serializable{
         }
         abajo -= runs[1].remove(runs[1].size() - 1);                                                              //Determino la nueva pista vertical
         min = Math.min(derecha, abajo);                                                                                 //El valor de la mista está dado por el menor
-        System.out.println(min);
         for (int i = 0; i < min; i++) {                                                                                 //Solo puedo colocar números menores al mínimo (ves static array numeros)
             //if (!(min - numeros[i] == numeros[i]))     REVISAR, EL MIN TIENE YA -1, POR LO QUE NO ES EL VALOR REAL    //Si colocar un valor hará que deba colocar el mismo después, ignorelo
                 values.add(numeros[i]);                                                                                 //Agrega el valor
