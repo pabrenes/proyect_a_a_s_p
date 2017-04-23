@@ -13,7 +13,7 @@ import java.util.Random;
  *              Jeison Esquivel - 2013018886
  * 14 abr 2017.
  */
-
+//up
 public class Kakuro implements Serializable{
 
     static int[] numeros = {1, 2, 3, 4, 5, 6, 7, 8, 9};
