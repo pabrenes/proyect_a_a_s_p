@@ -26,14 +26,6 @@ public class Pista implements Serializable {
         return abajo;
     }
 
-    public void setAbajo(int abajo) {
-        this.abajo = abajo;
-    }
-
-    public void setDerecha(int derecha) {
-        this.derecha = derecha;
-    }
-
     public String getStringDerecha() {
         if (derecha != 0)
             return "" + derecha;

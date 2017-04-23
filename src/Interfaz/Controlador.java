@@ -57,8 +57,8 @@ public class Controlador implements Initializable {
         kakuro.cargarKakuro("Kakuro.dat");
 
         construirTablero();
-        //PROBAR VALORES PARA UNA CASILLA DADA
-        /*kakuro.resolverKakuro(1, 1);*/
+
+        kakuro.permutaciones(4, 14);
 
         guardar.setOnAction(event -> System.out.println("Guardando..."));
 
@@ -162,7 +162,7 @@ public class Controlador implements Initializable {
     private void setKakuroPrueba() {
         int[][] tablero = {
                 {-2, -1, -1, -2, -2, -1, -1, -2, -2, -2, -1, -1, -2, -2},
-                {-1,  9,  0, -2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -2},
+                {-1,  0,  0, -2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -2},
                 {-1,  0,  0, -1,  0,  0,  0, -1, -1,  0,  0,  0, -1, -2},
                 {-2, -1,  0,  0,  0, -1,  0,  0, -1,  0,  0,  0,  0, -2},
                 {-2, -2, -1,  0,  0,  0, -1,  0,  0, -2, -1,  0,  0, -2},
@@ -176,16 +176,8 @@ public class Controlador implements Initializable {
                 {-2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -1,  0,  0, -2},
                 {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2}
         };
-
-
-
-        tablero=kakuro.LlenarKakuro();
-
-
-
-
         kakuro.setTablero(tablero);
-        /*int [][] pistas = {
+        int [][] pistas = {
                 {0, 1   , 0, 4},
                 {0, 2   , 0, 7},
                 {0, 5   , 0, 16},
@@ -240,14 +232,5 @@ public class Controlador implements Initializable {
         for (int[] cuarteto : pistas) {
             kakuro.ingresarPista(cuarteto[0], cuarteto[1], cuarteto[2], cuarteto[3]);
         }
-
-        */
     }
-
-    /*·········································································*/
-
-
-
-
-
 }
