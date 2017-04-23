@@ -160,6 +160,7 @@ public class Controlador implements Initializable {
     }
 
     private void setKakuroPrueba() {
+
         int[][] tablero = {
                 {-2, -1, -1, -2, -2, -1, -1, -2, -2, -2, -1, -1, -2, -2},
                 {-1,  0,  0, -2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -2},
@@ -177,9 +178,10 @@ public class Controlador implements Initializable {
                 {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2}
         };
 
-        tablero=kakuro.LlenarKakuro();
+        tablero = kakuro.LlenarKakuro();
 
         kakuro.setTablero(tablero);
+
         /*int [][] pistas = {
                 {0, 1   , 0, 4},
                 {0, 2   , 0, 7},

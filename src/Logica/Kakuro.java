@@ -20,13 +20,23 @@ public class Kakuro implements Serializable {
     static int[] numeros = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     static int[] numeroMaximo = {9, 17, 24, 30, 35, 39, 42, 44, 45};
     static int[] numeroMinimo = {1, 3, 6, 10, 15, 21, 28, 36, 45};
+    private int[][] tablero;
+    private Pista[][] pista;
+    /**
+    Pablo de aquí para arriba declara sus variables
+        ---------------+---------------
+                 ___ /^^[___              _
+               /|^+----+   |#___________//
+             ( -+ |____|   _______-----+/
+              ==_________--'            \
+                ~_|___|__~
+    Jeison de aquí para abajo declara sus variables
+    */
     Integer[] permitidos={1,2,3,4,5,6,7,8,9};
     private List<Integer> dominio = Arrays.asList(permitidos);
     private List<Integer> numColumn = new ArrayList<>();
     private  List<Integer> numFilas = new ArrayList<>();
     private  List<Integer> valoresDisponibles = new ArrayList<>();
-    private int[][] tablero;
-    private Pista[][] pista;
     private int[][] KakuroVacio = {
             {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
             {-2,-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
@@ -44,14 +54,17 @@ public class Kakuro implements Serializable {
             {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
     };
 
+    /**
+     * Builder para la clase kakuro
+     * Únicamente inicializa el espacio para las variables
+     */
     public Kakuro() {
         tablero = new int[14][14];
         pista = new Pista[14][14];
     }
 
-    //De momento se usa para probar las posibles soluciones a un casilla del kakuro
+
     public void resolverKakuro(int fila, int columna) {
-        ArrayList<Integer> values = obtenerSucesores(fila, columna);
 
     }
 
@@ -115,6 +128,14 @@ public class Kakuro implements Serializable {
         return runs;
     }
 
+    /**
+     *  Función encargada de llamar a una función recursiva con valores iniciales, además bloquea el caso base y lo
+     * retorna directo desde está función (Se evita una llamada recursiva innecesaria).
+     *  Se inicializa un vector vacio con el tamaño para que el algoritmo real de permutaciones dado por Backtracking
+     * pueda trabajar.
+     * @param casillas Tamaño total de casillas que se utilizan para formar la pista dada
+     * @param pista La suma que debe formar los numeros puestos en cada casilla sin repetirse
+     */
     public void permutaciones(int casillas, int pista) {
         if (casillas != 1) {
             int[] vector = new int[casillas];
@@ -125,38 +146,52 @@ public class Kakuro implements Serializable {
         }
     }
 
+    /**
+     * Función para encontrar permutaciones para una pista dada y la cantidad de casillas implementada con backtracking
+     * Trabaja sobre un mismo vector, reasignando valores para evitar guardar estados posterirores al vector
+     * Determina todas las posibles soluciones sin contar equivalentes por ejemplo (3-2-1 = 1-2-3 = 2-1-3)
+     * @param k Valor indicativo de en cual índice del vector estoy trabajando, además de ser determinante de solución
+     * @param casillas Vector sobre cual el algoritmo trabaja tiene el tamaño de las casillas requeridas
+     * @param suma La suma que se lleva en el momento con los valores para no estar recorriendo el vector en cada caso
+     * @param pista Valor que deben sumar en total todas las casillas
+     * @param tamano Se guarda el tamaño del vector para no recalcularlo
+     */
     private void permutacionesBT(int k, int[] casillas, int suma, int pista, int tamano) {
-        if (k == tamano) {
-            for (int dato : casillas) {
-                System.out.print("" + dato + "\t");
+        if (k == tamano) {                                                                                              //Si el k es igual al tamano (el idx del array se salio) ya es solución
+            for (int dato : casillas) {                                                                                 //Se almacenan los valores
+                System.out.print("" + dato + "\t");                                                                     //Mi poda garantiza que en este punto es solución SIEMPRE
             }
             System.out.print('\n');
             return;
         } else {
-            //Se exploran los valores prometedores para solución
+            //Se exploran los valores prometedores para solución (Se poda)
             for (int i = 1; i < 10; i++) {
-                if (!esta(casillas, i, tamano)) {
-                    if (k != 0) {
+                if (!esta(casillas, i, tamano)) {                                                                       //El valor a fuerza no puede estar ya colocado en el vector
+                    //A partir de aquí se divide en dos casos, es la casilla inicial o no lo es
+                    if (k != 0) {                                                                                       //Si no es la casilla inicial proceda
+                        //Aquí se toma la desición de siempre tener un orden ascedente para evitar generar mismas combinaciones permutadas de diferente manera SIEMPRE debe cumplirse
                         if (casillas[k - 1] < i) {
-                            if (k == tamano - 1) { //Es decir, el último
-                                if (suma + i == pista) {
-                                    casillas[k] = i;
-                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);
-                                    casillas[k] = 0;
+                            //Aquí redivido en dos posibles casos, que sea la última casilla o no lo sea
+                            if (k == tamano - 1) {                                                                      //Es la última casilla
+                                //Aquí otra anotación importante es que en la misma poda se decide si es solución para ser aceptado el i elegido debe sumar exactamente la suma requerida
+                                if (suma + i == pista) {                                                                //Solo si el valor ya completa una solución
+                                    casillas[k] = i;                                                                    //Se asigna el valor
+                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);                //El algoritmo ahora trabajo con el nuevo valor propuesto
+                                    casillas[k] = 0;                                                                    //Cuando regrese y quiera probar otro, se limpia (se evita guardar los estados)
                                 }
-                            } else {
-                                if (suma + i < pista) {
-                                    casillas[k] = i;
-                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);
-                                    casillas[k] = 0;
+                            } else {                                                                                    //No era la casilla final
+                                if (suma + i < pista) {                                                                 //Sirve cualquier valor mientras no sobrepase la suma requerida
+                                    casillas[k] = i;                                                                    //Se asigna el valor
+                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);                //El algoritmo ahora trabajo con el nuevo valor propuesto
+                                    casillas[k] = 0;                                                                    //Cuando regrese y quiera probar otro, se limpia (se evita guardar los estados)
                                 }
                             }
                         }
-                    } else {
-                        if (i < pista) {
-                            casillas[k] = i;
-                            permutacionesBT(k + 1, casillas, suma + i, pista, tamano);
-                            casillas[k] = 0;
+                    } else {                                                                                            //Es la casilla inicial
+                        if (i < pista) {                                                                                //Si es la primera casilla solo necesito que el i no sobrepase la suma requerida
+                            casillas[k] = i;                                                                            //Se asigna el valor
+                            permutacionesBT(k + 1, casillas, suma + i, pista, tamano);                        //El algoritmo ahora trabajo con el nuevo valor propuesto
+                            casillas[k] = 0;                                                                            //Cuando regrese y quiera probar otro, se limpia (se evita guardar los estados)
                         }
                     }
                 }
@@ -164,14 +199,29 @@ public class Kakuro implements Serializable {
         }
     }
 
+    /**
+     * Función que determina si un valor se encuentra en arreglo ordenado ascendemente
+     * @param vector Vector en el que se desea buscar (debe estar ordenado de menor a mayor)
+     * @param valor Valor que se va a buscar dentro del arreglo
+     * @param tamano Tamaño del vector para evitar recorrer el arreglo una vez solo para esto
+     * @return Se retorna un valor booleano que indica si el valor estaba o no (Si estaba = true, no estada = false)
+     */
     private boolean esta(int[] vector, int valor, int tamano) {
-        int idx = 0;
-        while (idx < tamano && vector[idx] < valor) {
-            idx++;
-        }
-        return (idx < tamano && vector[idx] == valor);
+        int idx = 0;                                                                                                    //Necesito un índice para moverme sobre el arreglo
+        while (idx < tamano && vector[idx] < valor) {                                                                   //Mientras el índice no se desborde y el valor actual no sea mayor al que busco
+            idx++;                                                                                                      //Desplazece
+        } //Al arreglo estar ordenado me garantiza que si encuentro un valor mayor, exista la posibilidad de que mi indice actual apunte al valor, sino nunca existio
+        return (idx < tamano && vector[idx] == valor); //Se retorna directamente si el valor quedó en mi último índice o no
     }
 
+    /**
+     * Función que dado dos ints, una fila y una columna correspondientes a una casilla del kakuro, retornará otro par
+     * de tal manera que la fila de parámetro más la columna que se retorna formen la pista horizontal para la casilla
+     * de igual manera en base a la columna retorna la fila de manera que se construya la pista vertical para la casilla
+     * @param fila Fila en la que se encuentra la casilla (empieza en 0)
+     * @param columna Columna donde se encuentra la casilla (empieza en 0)
+     * @return se retrona un vector de dos ints [columna, fila], para formar dos pares nuevos con los parámetros.
+     */
     private int[] getPistas(int fila, int columna) {
         int[] pista = new int[2];                                                                                       //Contenedor de las pistas
         for (int i = fila - 1; i > -1; i--) {                                                                           //Determino la pista vertical de la casilla
@@ -189,31 +239,53 @@ public class Kakuro implements Serializable {
         return pista;
     }
 
+    /**
+     * Dado un cuarteto ingresa una pista al tablero de pistas
+     * @param fila La fila correspondiente a la pista a ingresar
+     * @param columna La columna correspondiente a la pista a ingresar
+     * @param derecha el determinante de la fila horizontal
+     * @param abajo el determinante de la fila vertical
+     */
     public void ingresarPista(int fila, int columna, int derecha, int abajo) {
         pista[fila][columna] = new Pista(derecha, abajo);
     }
 
-    private int maxParaCasillas(int cantCasillas) {
-        int total = 0;
-        return total;
-    }
-
+    /**
+     * Obtener el tablero lógico
+     * @return se retorna el tablero lógico del kakuro
+     */
     public int[][] getTablero() {
         return tablero;
     }
 
+    /**
+     * Obtener el tablero de pistas
+     * @return se retorna el tablero de pistas
+     */
     public Pista[][] getPista() {
         return pista;
     }
 
+    /**
+     * Dado un tablero int[][] lo asigna como tablero lógico
+     * @param tablero int[][] tablero para asignar
+     */
     public void setTablero(int[][] tablero) {
         this.tablero = tablero;
     }
 
+    /**
+     * Dado un tablero de pistas Pista[][] lo asigna como el actual
+     * @param pista Pista[][] que será asignado como el nuevo tablero de pistas
+     */
     public void setPista(Pista[][] pista) {
         this.pista = pista;
     }
 
+    /**
+     * Función que guarda un .dat con el kakuro en un parámetro dado
+     * @param path String con el path completo para guardar un kakuro
+     */
     public void guardarKakuro(String path) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
@@ -224,6 +296,10 @@ public class Kakuro implements Serializable {
         }
     }
 
+    /**
+     * Dado un path carga el .dat con un kakuro y lo asigna a esta instancia del kakuro
+     * @param path String como el path completo de donde se debe cargar un kakuro
+     */
     public void cargarKakuro(String path) {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
@@ -239,8 +315,59 @@ public class Kakuro implements Serializable {
         }
     }
 
-
-    /*********************************************************/
+    /**
+    //                          *
+    //                         * *
+    //                        *   *
+    //                       *     *
+    //                      *       *
+    //                     *         *
+    //                    *****   *****
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                        *****
+    //----------------------------------------------------------//
+    //                    PABLO  WORKSPACE                      //
+    //----------------------------------------------------------//
+    //               .ed$$$$$eec.
+    //           .e$$$$$$$$$$$$$$$$$$ééééé$$$$$c
+    //          d$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$c
+    //        .$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$b.
+    //       $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ $b
+    //      d$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$F
+    //     .$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    //     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    //    .$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$**$ ^$$$$
+    //    4 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*"     4$$F
+    //    4 '$$$$$$$$$$$$$$$$$$$$$$$$$$$"        4$$
+    //    4  $$$$$$$$$$$$$$$$$$$$$$$$$$$        .$$%
+    //    d   $$$$$          $$$$$*$$$$$$c   ..e$$"
+    //    -   4$$$$          ^$$$$  *$$$$$F  ^"""
+    //        4$$$$          4$$$$ z$$$$$"
+    //        4$$$$          4$$$$ ^$$$P
+    //        ^$$$$b         '$$$$e  "F
+    //----------------------------------------------------------//
+    //                    JEISON WORKSPACE                      //
+    //----------------------------------------------------------//
+    //                        *****
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                        *   *
+    //                    *****   *****
+    //                     *         *
+    //                      *       *
+    //                       *     *
+    //                        *   *
+    //                         * *
+    //                          *
+    */
 
     public void Imprimir() {
         for (int i = 0; i < 14; i++) {
