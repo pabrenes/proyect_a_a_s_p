@@ -3,6 +3,7 @@ package Logica;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by   Pablo Brenes    - 2016250460
@@ -27,11 +28,12 @@ public class Kakuro implements Serializable{
     //De momento se usa para probar las posibles soluciones a un casilla del kakuro
     public void resolverKakuro(int fila, int columna) {
         ArrayList<Integer> values = obtenerSucesores(fila, columna);
-        System.out.println("------------------------");
-        for (int value : values) {
-            System.out.println(value);
-        }
-        System.out.println("------------------------");
+
+    }
+
+    private boolean promete() {
+        boolean laVaraPromete = false;
+        return true;
     }
 
     private ArrayList<Integer> obtenerSucesores(int fila, int columna) {
@@ -50,9 +52,16 @@ public class Kakuro implements Serializable{
         }
         abajo -= runs[1].remove(runs[1].size() - 1);                                                              //Determino la nueva pista vertical
         min = Math.min(derecha, abajo);                                                                                 //El valor de la mista está dado por el menor
-        for (int i = 0; i < min; i++) {                                                                                 //Solo puedo colocar números menores al mínimo (ves static array numeros)
-            //if (!(min - numeros[i] == numeros[i]))     REVISAR, EL MIN TIENE YA -1, POR LO QUE NO ES EL VALOR REAL    //Si colocar un valor hará que deba colocar el mismo después, ignorelo
+        if (min > 9){
+            min = 9;                                                                                                    //Si es mayor a 9 baje a 9
+            for (int i = min - 1; i > -1; i--) {                                                                        //Solo puedo colocar números menores al mínimo (ves static array numeros)
                 values.add(numeros[i]);                                                                                 //Agrega el valor
+            }
+        }
+        else {
+            for (int i = 0; i < min; i++) {                                                                             //Solo puedo colocar números menores al mínimo (ves static array numeros)
+                values.add(numeros[i]);                                                                                 //Agrega el valor
+            }
         }
         values.removeAll(runs[0]);                                                                                      //Elimino repetidos horizontalmente
         values.removeAll(runs[1]);                                                                                      //Elimino repetidos verticalmente
@@ -148,6 +157,67 @@ public class Kakuro implements Serializable{
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Archivo incorrecto o corrupto");
         }
+    }
+
+    public void permutaciones (int casillas, int pista) {
+        if (casillas != 1) {
+            int[] vector = new int[casillas];
+            Arrays.fill(vector, 0);
+            permutacionesBT(0, vector, 0, pista, casillas);
+        }
+        else{
+            System.out.println(pista);
+        }
+    }
+
+    private void permutacionesBT(int k, int[] casillas, int suma, int pista, int tamano) {
+        if (k == tamano) {
+            for (int dato : casillas) {
+                System.out.print("" + dato + "\t");
+            }
+            System.out.print('\n');
+            return;
+        }
+        else {
+            //Se exploran los valores prometedores para solución
+            for (int i = 1; i < 10; i++) {
+                if (!esta(casillas, i, tamano)) {
+                    if (k != 0) {
+                        if (casillas[k-1] < i) {
+                            if (k == tamano - 1) { //Es decir, el último
+                                if (suma + i == pista) {
+                                    casillas[k] = i;
+                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);
+                                    casillas[k] = 0;
+                                }
+                            } else {
+                                if (suma + i < pista) {
+                                    casillas[k] = i;
+                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);
+                                    casillas[k] = 0;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        if (i < pista) {
+                            casillas[k] = i;
+                            permutacionesBT(k+1, casillas, suma + i, pista, tamano);
+                            casillas[k] = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean esta(int[] vector, int valor, int tamano) {
+        for (int i = 0; i < tamano; i++) {
+            if (vector[i] == valor){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
