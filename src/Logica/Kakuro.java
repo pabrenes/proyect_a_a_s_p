@@ -3,8 +3,11 @@ package Logica;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 /**
  * Created by   Pablo Brenes    - 2016250460
  *              Jeison Esquivel - 2013018886
@@ -16,9 +19,31 @@ public class Kakuro implements Serializable{
     static int[] numeros = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     static int[] numeroMaximo = {9, 17, 24, 30, 35, 39, 42, 44, 45};
     static int[] numeroMinimo = {1, 3, 6, 10, 15, 21, 28, 36, 45};
+    Integer[] permitidos={1,2,3,4,5,6,7,8,9};
+    private   List<Integer> dominio = Arrays.asList(permitidos);
+    private List<Integer> numColumn = new ArrayList<>();
+    private  List<Integer> numFilas = new ArrayList<>();
+    private  List<Integer> valoresDisponibles = new ArrayList<>();
+
 
     private int[][] tablero;
     private Pista[][] pista;
+    private int[][] KakuroVacio = {
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2,-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+    };
 
     public Kakuro() {
         tablero = new int[14][14];
@@ -28,12 +53,11 @@ public class Kakuro implements Serializable{
     //De momento se usa para probar las posibles soluciones a un casilla del kakuro
     public void resolverKakuro(int fila, int columna) {
         ArrayList<Integer> values = obtenerSucesores(fila, columna);
-
-    }
-
-    private boolean promete() {
-        boolean laVaraPromete = false;
-        return true;
+        System.out.println("------------------------");
+        for (int value : values) {
+            System.out.println(value);
+        }
+        System.out.println("------------------------");
     }
 
     private ArrayList<Integer> obtenerSucesores(int fila, int columna) {
@@ -52,16 +76,9 @@ public class Kakuro implements Serializable{
         }
         abajo -= runs[1].remove(runs[1].size() - 1);                                                              //Determino la nueva pista vertical
         min = Math.min(derecha, abajo);                                                                                 //El valor de la mista está dado por el menor
-        if (min > 9){
-            min = 9;                                                                                                    //Si es mayor a 9 baje a 9
-            for (int i = min - 1; i > -1; i--) {                                                                        //Solo puedo colocar números menores al mínimo (ves static array numeros)
+        for (int i = 0; i < min; i++) {                                                                                 //Solo puedo colocar números menores al mínimo (ves static array numeros)
+            //if (!(min - numeros[i] == numeros[i]))     REVISAR, EL MIN TIENE YA -1, POR LO QUE NO ES EL VALOR REAL    //Si colocar un valor hará que deba colocar el mismo después, ignorelo
                 values.add(numeros[i]);                                                                                 //Agrega el valor
-            }
-        }
-        else {
-            for (int i = 0; i < min; i++) {                                                                             //Solo puedo colocar números menores al mínimo (ves static array numeros)
-                values.add(numeros[i]);                                                                                 //Agrega el valor
-            }
         }
         values.removeAll(runs[0]);                                                                                      //Elimino repetidos horizontalmente
         values.removeAll(runs[1]);                                                                                      //Elimino repetidos verticalmente
@@ -159,64 +176,192 @@ public class Kakuro implements Serializable{
         }
     }
 
-    public void permutaciones (int casillas, int pista) {
-        if (casillas != 1) {
-            int[] vector = new int[casillas];
-            Arrays.fill(vector, 0);
-            permutacionesBT(0, vector, 0, pista, casillas);
-        }
-        else{
-            System.out.println(pista);
+
+    /*********************************************************/
+
+    public void Imprimir(){
+        for (int i = 0; i < 14; i++) {
+            for (int j = 0; j < 14; j++) {
+                System.out.println(KakuroVacio[i][j] + " ");
+            }
+            System.out.println();
         }
     }
 
-    private void permutacionesBT(int k, int[] casillas, int suma, int pista, int tamano) {
-        if (k == tamano) {
-            for (int dato : casillas) {
-                System.out.print("" + dato + "\t");
-            }
-            System.out.print('\n');
-            return;
+
+    public List numInComlumnas(int fila,int columna ){
+        numColumn.clear();
+        int puntero=1;
+        while (KakuroVacio[fila-puntero][columna]!=-2) {
+            numColumn.add(KakuroVacio[fila-puntero][columna]);
+            puntero++;
         }
-        else {
-            //Se exploran los valores prometedores para solución
-            for (int i = 1; i < 10; i++) {
-                if (!esta(casillas, i, tamano)) {
-                    if (k != 0) {
-                        if (casillas[k-1] < i) {
-                            if (k == tamano - 1) { //Es decir, el último
-                                if (suma + i == pista) {
-                                    casillas[k] = i;
-                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);
-                                    casillas[k] = 0;
-                                }
-                            } else {
-                                if (suma + i < pista) {
-                                    casillas[k] = i;
-                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);
-                                    casillas[k] = 0;
-                                }
-                            }
-                        }
+        puntero=1;
+        while (KakuroVacio[fila+puntero][columna]!=-2) {
+            numColumn.add(KakuroVacio[fila+puntero][columna]);
+            puntero++;
+        }
+        return numColumn;
+    };
+
+    public List numInFilas(int fila,int columna ){
+        numFilas.clear();
+        int puntero=1;
+        while (KakuroVacio[fila][columna-puntero]!=-2) {
+            numFilas.add(KakuroVacio[fila][columna-puntero]);
+            puntero++;
+        }
+        puntero=1;
+        while (KakuroVacio[fila][columna+puntero]!=-2) {
+            numFilas.add(KakuroVacio[fila][columna+puntero]);
+            puntero++;
+        }
+        return numFilas;
+    };
+
+
+    /*
+ cuanta la cantidad de casillas usadas en fila
+ si es menor a 10 entonces puede ingresar mas filas
+ */
+    public boolean CantCasilasUsadasFila(int fila ){
+        int cantidad=0;
+        for (int j = 1; j < 14; j++) {
+            if (KakuroVacio[fila][j]!=-2) {
+                cantidad++;
+            }
+        }
+        return (cantidad<10);
+    };
+      /*
+    cuanta la cantidad de casillas usadas en columna
+    si es menor a 10 entonces puede ingresar mas filas
+    */
+
+    public boolean CantCasilasUsadasColumna(int columna ){
+        int cantidad=0;
+        for (int i = 1; i < 14; i++) {
+            if (KakuroVacio[i][columna]!=-2) {
+                cantidad++;
+            }
+        }
+        return (cantidad<10);
+    };
+
+    public boolean esSolucion(int fila, int columna, int valor){
+        List conjuntoColumna=numInComlumnas(fila, columna);
+        List conjuntoFila= numInFilas(fila, columna);
+
+        if (CantCasilasUsadasFila(fila) && CantCasilasUsadasColumna(columna)) {
+
+            if (!conjuntoColumna.contains(valor)&& !conjuntoFila.contains(valor))
+
+                return true;
+        }
+        return false;
+    };
+
+    public List ConjuntoPrometedor(int fila, int columna){
+        List<Integer> copy = new ArrayList<Integer>(dominio);
+        List conjuntoFila=numInFilas(fila, columna);
+        List conjuntoColumna=numInComlumnas(fila, columna);
+        copy.removeAll(conjuntoColumna);
+        copy.removeAll(conjuntoFila);
+        return copy;
+    };
+
+
+
+
+    public void ProcesarSolucion(int fila, int columna, int valor){
+        KakuroVacio[fila][columna]=valor;
+    };
+
+
+    public int[][] LlenarKakuro(){
+        Random vaCasilla= new Random();                                         /*0=no va casilla/ 1 si va casilla */
+        Random rnd= new Random();                                               /* valor random*/
+        int valor;
+        for (int i = 1; i < 13; i++) {
+            for (int j = 1; j < 13; j++) {
+                if (vaCasilla.nextInt(20)>2){
+                    valor=rnd.nextInt(9)+1;
+                    if (esSolucion(i, j, valor)){
+                        ProcesarSolucion(i, j, valor);
                     }
-                    else {
-                        if (i < pista) {
-                            casillas[k] = i;
-                            permutacionesBT(k+1, casillas, suma + i, pista, tamano);
-                            casillas[k] = 0;
+                    else{
+                        List ConjPrometedor=ConjuntoPrometedor(i,j);
+
+                        if (!ConjPrometedor.isEmpty()) {
+                            int nuevoValor= (int) ConjPrometedor.get(0);
+                            ProcesarSolucion(i, j, nuevoValor);
                         }
+
                     }
                 }
             }
         }
-    }
 
-    private boolean esta(int[] vector, int valor, int tamano) {
-        int idx = 0;
-        while (idx < tamano && vector[idx] < valor) {
-            idx++;
+        return KakuroVacio;
+    };
+
+
+    public void generarCuartetosHorizontales(){
+        int posicion=0;
+        int suma=0;
+        int columna=1;
+        for (int i = 1; i < 13; i++) {
+            while (columna<14){
+                if (KakuroVacio[i][columna]>0 )
+                    suma+=KakuroVacio[i][columna];
+                else {
+                    if (KakuroVacio[i][columna-1]!=-2 ){
+                    KakuroVacio[i][posicion] = -1;
+                    getPista()[i][posicion].setDerecha(suma);
+                    posicion = columna;
+                    suma = 0;
+                }else posicion=columna;
+                }
+
+                columna++;
+            }
+            getPista()[i][posicion].setDerecha(suma);
+            posicion=0;
+            columna=1;
         }
-        return (idx < tamano && vector[idx] == valor);
-    }
+    };
+
+
+
+    public void generarCuartetosVerticales(){
+        int posicion=0;
+        int suma=0;
+        int fila=1;
+        for (int j = 1; j < 14; j++) {
+            while (fila<14){
+
+                if (KakuroVacio[fila][j]>0 )
+                    suma+=KakuroVacio[fila][j];
+
+                else {
+                    if (KakuroVacio[fila-1][j]>0 ){
+                        KakuroVacio[posicion][j] = -1;
+
+                        ingresarPista(posicion,j,getPista()[posicion][j].getDerecha(), suma);
+                        posicion = fila;
+                        suma = 0;
+                    }else posicion=fila;
+                }
+
+                fila++;
+            }
+            ingresarPista(posicion,j,getPista()[posicion][j].getDerecha(),suma);
+            posicion=0;
+            fila=1;
+        }
+    };
+
+
+
 
 }
