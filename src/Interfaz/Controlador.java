@@ -57,8 +57,8 @@ public class Controlador implements Initializable {
         kakuro.cargarKakuro("Kakuro.dat");
 
         construirTablero();
-        //PROBAR VALORES PARA UNA CASILLA DADA
-        kakuro.resolverKakuro(1, 1);
+
+        kakuro.permutaciones(4, 14);
 
         guardar.setOnAction(event -> System.out.println("Guardando..."));
 
