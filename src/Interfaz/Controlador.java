@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 
 /**
@@ -58,7 +59,10 @@ public class Controlador implements Initializable {
 
         construirTablero();
 
-        kakuro.permutaciones(4, 14);
+        HashSet<Integer> valores = kakuro.permutaciones(2, 4);
+        for (Integer dato : valores) {
+            System.out.println(valores);
+        }
 
         guardar.setOnAction(event -> System.out.println("Guardando..."));
 
@@ -178,11 +182,11 @@ public class Controlador implements Initializable {
                 {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2}
         };
 
-        tablero = kakuro.LlenarKakuro();
+        //tablero = kakuro.LlenarKakuro();
 
         kakuro.setTablero(tablero);
 
-        /*int [][] pistas = {
+        int [][] pistas = {
                 {0, 1   , 0, 4},
                 {0, 2   , 0, 7},
                 {0, 5   , 0, 16},
@@ -238,7 +242,6 @@ public class Controlador implements Initializable {
             kakuro.ingresarPista(cuarteto[0], cuarteto[1], cuarteto[2], cuarteto[3]);
         }
 
-        */
     }
 
     /*·········································································*/

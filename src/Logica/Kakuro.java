@@ -2,12 +2,8 @@ package Logica;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.*;
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by   Pablo Brenes    - 2016250460
@@ -136,14 +132,16 @@ public class Kakuro implements Serializable {
      * @param casillas Tamaño total de casillas que se utilizan para formar la pista dada
      * @param pista La suma que debe formar los numeros puestos en cada casilla sin repetirse
      */
-    public void permutaciones(int casillas, int pista) {
+    public HashSet<Integer> permutaciones(int casillas, int pista) {
+        HashSet<Integer> valores = new HashSet<>();
         if (casillas != 1) {
             int[] vector = new int[casillas];
             Arrays.fill(vector, 0);
-            permutacionesBT(0, vector, 0, pista, casillas);
+            permutacionesBT(0, vector, 0, pista, casillas, valores);
         } else {
-            System.out.println(pista);
+            valores.add(pista);
         }
+        return valores;
     }
 
     /**
@@ -155,13 +153,13 @@ public class Kakuro implements Serializable {
      * @param suma La suma que se lleva en el momento con los valores para no estar recorriendo el vector en cada caso
      * @param pista Valor que deben sumar en total todas las casillas
      * @param tamano Se guarda el tamaño del vector para no recalcularlo
+     * @param valores HashSet para guardar los valores disponibles para crear una pista (hashSet para evitar duplicados)
      */
-    private void permutacionesBT(int k, int[] casillas, int suma, int pista, int tamano) {
+    private void permutacionesBT(int k, int[] casillas, int suma, int pista, int tamano, HashSet<Integer> valores) {
         if (k == tamano) {                                                                                              //Si el k es igual al tamano (el idx del array se salio) ya es solución
             for (int dato : casillas) {                                                                                 //Se almacenan los valores
-                System.out.print("" + dato + "\t");                                                                     //Mi poda garantiza que en este punto es solución SIEMPRE
+                valores.add(dato);                                                                                      //Mi poda garantiza que en este punto es solución SIEMPRE
             }
-            System.out.print('\n');
             return;
         } else {
             //Se exploran los valores prometedores para solución (Se poda)
@@ -176,13 +174,13 @@ public class Kakuro implements Serializable {
                                 //Aquí otra anotación importante es que en la misma poda se decide si es solución para ser aceptado el i elegido debe sumar exactamente la suma requerida
                                 if (suma + i == pista) {                                                                //Solo si el valor ya completa una solución
                                     casillas[k] = i;                                                                    //Se asigna el valor
-                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);                //El algoritmo ahora trabajo con el nuevo valor propuesto
+                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano, valores);                //El algoritmo ahora trabajo con el nuevo valor propuesto
                                     casillas[k] = 0;                                                                    //Cuando regrese y quiera probar otro, se limpia (se evita guardar los estados)
                                 }
                             } else {                                                                                    //No era la casilla final
                                 if (suma + i < pista) {                                                                 //Sirve cualquier valor mientras no sobrepase la suma requerida
                                     casillas[k] = i;                                                                    //Se asigna el valor
-                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano);                //El algoritmo ahora trabajo con el nuevo valor propuesto
+                                    permutacionesBT(k + 1, casillas, suma + i, pista, tamano, valores);                //El algoritmo ahora trabajo con el nuevo valor propuesto
                                     casillas[k] = 0;                                                                    //Cuando regrese y quiera probar otro, se limpia (se evita guardar los estados)
                                 }
                             }
@@ -190,7 +188,7 @@ public class Kakuro implements Serializable {
                     } else {                                                                                            //Es la casilla inicial
                         if (i < pista) {                                                                                //Si es la primera casilla solo necesito que el i no sobrepase la suma requerida
                             casillas[k] = i;                                                                            //Se asigna el valor
-                            permutacionesBT(k + 1, casillas, suma + i, pista, tamano);                        //El algoritmo ahora trabajo con el nuevo valor propuesto
+                            permutacionesBT(k + 1, casillas, suma + i, pista, tamano, valores);                        //El algoritmo ahora trabajo con el nuevo valor propuesto
                             casillas[k] = 0;                                                                            //Cuando regrese y quiera probar otro, se limpia (se evita guardar los estados)
                         }
                     }
