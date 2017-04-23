@@ -212,12 +212,11 @@ public class Kakuro implements Serializable{
     }
 
     private boolean esta(int[] vector, int valor, int tamano) {
-        for (int i = 0; i < tamano; i++) {
-            if (vector[i] == valor){
-                return true;
-            }
+        int idx = 0;
+        while (idx < tamano && vector[idx] < valor) {
+            idx++;
         }
-        return false;
+        return (idx < tamano && vector[idx] == valor);
     }
 
 }
