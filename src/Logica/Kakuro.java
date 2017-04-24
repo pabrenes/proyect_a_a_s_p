@@ -18,7 +18,7 @@ public class Kakuro implements Serializable {
     private ArrayList<int[]> casillas;
     private int totalCasillas;
     private boolean solucion;
-    private long totalTime;
+    private long totalTime, timeEnd;
     /**
     Pablo de aquí para arriba declara sus variables
         ---------------+---------------
@@ -71,7 +71,6 @@ public class Kakuro implements Serializable {
         totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
         solucion = false;
         resolverKakuroBT(0);
-        long timeEnd = System.currentTimeMillis();
         totalTime = timeEnd - timeStart;
     }
 
@@ -83,6 +82,7 @@ public class Kakuro implements Serializable {
     private void resolverKakuroBT(int k) {
         if (k == totalCasillas) {                                                                                       //Solución encontrada
             solucion = true;
+            timeEnd = System.currentTimeMillis();
         }
         else {                                                                                                          //Aún no hay solución
             int[] parOrdenado = casillas.get(k);                                                                        //Obtengo los pares ordenados a trabajar según el k
