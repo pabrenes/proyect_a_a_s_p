@@ -108,8 +108,9 @@ public class Kakuro implements Serializable {
         casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
         totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
         Hilo hilo = new Hilo(tablero, 0);
-        hilo.setTopeHilos(100);
+        hilo.setTopeHilos(1);
         hilo.setKakuro(this);
+        hilo.setTimeStart(System.nanoTime());
         hilo.start();
     }
 
@@ -125,7 +126,7 @@ public class Kakuro implements Serializable {
         }
         else {                                                                                                          //Aún no hay solución
             int[] parOrdenado = casillas.get(k);                                                                        //Obtengo los pares ordenados a trabajar según el k
-            HashSet<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1]);                              //Obtengo los sucesores para esa casilla
+            HashSet<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1], tablero);                     //Obtengo los sucesores para esa casilla
             //Una desición erronea tomada anteriormente genera que no encuentre valores posibles para que el kakuro obtenga una solución
             //Sucesores puede ser generada de manera vacía, lo que indica que atrás hubo un valor no correcto
             //Por lo que simplemente no intenta realizar nuevas conmparaciones y regresa para enmendar el error
@@ -168,17 +169,17 @@ public class Kakuro implements Serializable {
      * @param columna Columna donde se encuentra la columna
      * @return se retorna un SetHash con los valores que pueden ser colocados en esa casilla
      */
-    protected HashSet<Integer> obtenerSucesores(int fila, int columna) {
+    protected HashSet<Integer> obtenerSucesores(int fila, int columna, int[][] tablero) {
         HashSet<Integer> values;
 
-        int[] pistas = getPistas(fila, columna);                                                                        //Obtengo la posición de las pistas en el tablero
+        int[] pistas = getPistas(fila, columna, tablero);                                                                        //Obtengo la posición de las pistas en el tablero
         int pHoriz, pVerti;                                                                                             //Pista horizontal y vertical de la casilla
         int totalD, totalA;                                                                                             //Total de casillas en la run horizontal y vertical
 
         pHoriz = pista[fila][pistas[0]].getDerecha();                                                                   //Obtengo la pista horizontal
         pVerti = pista[pistas[1]][columna].getAbajo();                                                                  //Obtengo la pista vertical
 
-        ArrayList<Integer>[] runs = getRuns(fila, pistas[0] + 1, pistas[1] + 1, columna);               //Obtengo los datos de las runs (ver doc de la función)
+        ArrayList<Integer>[] runs = getRuns(fila, pistas[0] + 1, pistas[1] + 1, columna, tablero);               //Obtengo los datos de las runs (ver doc de la función)
 
         //Se usa la cantidad de casillas para calcular permutaciones disponibles para cierta pista en esa cantidad de casillas
         //Este dato es variable, cuando se avanza a una casilla dependiente de una run, se trata como si fuera otra run totalmente distinta
@@ -220,7 +221,7 @@ public class Kakuro implements Serializable {
      * @param columnaA int que corresponde a la columna en la cual se encuentra la pista vertical para la run
      * @return Se retorna un arreglo de tamaño dos con dos arreglos de tamaño dinámico (especificados antes)
      */
-    private ArrayList<Integer>[] getRuns(int filaD, int columnaD, int filaA, int columnaA) {
+    private ArrayList<Integer>[] getRuns(int filaD, int columnaD, int filaA, int columnaA, int[][] tablero) {
         ArrayList<Integer>[] runs = new ArrayList[2];                                                                   //Contenedor para los valores en las runs
         int sumaD = 0, sumaA = 0, totalD = 0, totalA = 0;                                                               //Control para la suma y casillas para la run
         runs[0] = new ArrayList<>();
@@ -252,7 +253,7 @@ public class Kakuro implements Serializable {
      * @param columna Columna donde se encuentra la casilla (empieza en 0)
      * @return se retrona un vector de dos ints [columna, fila], para formar dos pares nuevos con los parámetros.
      */
-    private int[] getPistas(int fila, int columna) {
+    private int[] getPistas(int fila, int columna, int[][] tablero) {
 
         int[] pista = new int[4];                                                                                       //Contenedor de las pistas
 

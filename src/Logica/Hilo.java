@@ -16,6 +16,7 @@ public class Hilo extends Thread{
     private static int hilosEnEjecucion = 1;
     private int[][] copiaTablero;
     private int k;
+    private long timeStart;
 
     public Hilo(int[][] tablero, int k) {
         copiaTablero = tablero;
@@ -24,18 +25,19 @@ public class Hilo extends Thread{
 
     @Override
     public void run() {
-        System.out.println(hilosEnEjecucion);
         if (k == kakuro.getTotalCasillas()) {
             kakuro.setTablero(copiaTablero);
-            System.out.println("Ya");
+            double time = (System.nanoTime() - timeStart)/1000;
+            time /= 1000;
+            System.out.println(time);
             solucion = true;
         }
         else {
             int[] parOrdenado = kakuro.getCasillas().get(k);
-            HashSet<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1]);
+            HashSet<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
             for (Integer sucesor : sucesores) {
                 copiaTablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
-                if (hilosEnEjecucion < topeHilos){
+                if (hilosEnEjecucion <= topeHilos){
                     hilosEnEjecucion++;
                     new Hilo(copiaTablero(), k + 1).start();
                 } else {
@@ -53,11 +55,14 @@ public class Hilo extends Thread{
     private void resolverKakuroBT(int k) {
         if (k == kakuro.getTotalCasillas()) {
             kakuro.setTablero(copiaTablero);
+            double time = (System.nanoTime() - timeStart)/1000;
+            time /= 1000;
+            System.out.println(time);
             solucion = true;
         }
         else {
             int[] parOrdenado = kakuro.getCasillas().get(k);
-            HashSet<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1]);
+            HashSet<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
             for (Integer sucesor : sucesores) {
                 copiaTablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
                 if (solucion)
@@ -67,12 +72,20 @@ public class Hilo extends Thread{
         }
     }
 
-    public static void setKakuro(Kakuro _kakuro) {
+    static void setKakuro(Kakuro _kakuro) {
         kakuro = _kakuro;
     }
 
-    public static void setTopeHilos(int tope) {
+    static void setTopeHilos(int tope) {
         topeHilos = tope;
+    }
+
+    public long getTimeStart() {
+        return timeStart;
+    }
+
+    public void setTimeStart(long timeStart) {
+        this.timeStart = timeStart;
     }
 
     private int[][] copiaTablero() {
