@@ -16,7 +16,7 @@ public class Hilo extends Thread{
     private static int hilosEnEjecucion = 1;
     private int[][] copiaTablero;
     private int k;
-    private long timeStart;
+    private static long timeStart;
 
     public Hilo(int[][] tablero, int k) {
         copiaTablero = tablero;
@@ -25,6 +25,12 @@ public class Hilo extends Thread{
 
     @Override
     public void run() {
+        resolverKakuroBT(k);
+        hilosEnEjecucion--;
+
+    }
+
+    private void resolverKakuroBT(int k) {
         if (k == kakuro.getTotalCasillas()) {
             kakuro.setTablero(copiaTablero);
             double time = (System.nanoTime() - timeStart)/1000;
@@ -43,28 +49,6 @@ public class Hilo extends Thread{
                 } else {
                     resolverKakuroBT(k + 1);
                 }
-                if (solucion)
-                    break;
-                copiaTablero[parOrdenado[0]][parOrdenado[1]] = 0;
-            }
-        }
-        hilosEnEjecucion--;
-
-    }
-
-    private void resolverKakuroBT(int k) {
-        if (k == kakuro.getTotalCasillas()) {
-            kakuro.setTablero(copiaTablero);
-            double time = (System.nanoTime() - timeStart)/1000;
-            time /= 1000;
-            System.out.println(time);
-            solucion = true;
-        }
-        else {
-            int[] parOrdenado = kakuro.getCasillas().get(k);
-            HashSet<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
-            for (Integer sucesor : sucesores) {
-                copiaTablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
                 if (solucion)
                     break;
                 copiaTablero[parOrdenado[0]][parOrdenado[1]] = 0;

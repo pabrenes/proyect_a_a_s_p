@@ -52,8 +52,8 @@ public class Controlador implements Initializable {
         lines = new ArrayList<>();
         kakuro = new Kakuro();
 
-        setKakuroPrueba();
-        //setKakuroPruebaHard();
+        //setKakuroPrueba();
+        setKakuroPruebaHard();
 
         construirTablero();
 
