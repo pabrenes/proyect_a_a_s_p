@@ -16,7 +16,6 @@ import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.ResourceBundle;
 
 /**
@@ -51,25 +50,20 @@ public class Controlador implements Initializable {
 
         setKakuroPrueba();
 
-        kakuro.guardarKakuro("Kakuro.dat");
-
-        kakuro = new Kakuro();
-
-        kakuro.cargarKakuro("Kakuro.dat");
-
         construirTablero();
-
-        HashSet<Integer> valores = kakuro.permutaciones(2, 4);
-        for (Integer dato : valores) {
-            System.out.println(valores);
-        }
 
         guardar.setOnAction(event -> System.out.println("Guardando..."));
 
         cargar.setOnAction(event -> System.out.println("Cargando..."));
 
-        resolver.setOnAction(event -> System.out.println("Resolviendo..."));
+        resolver.setOnAction(event -> resolver());
 
+    }
+
+    private void resolver() {
+        System.out.println("Resolviendo...");
+        kakuro.resolverKakuro();
+        construirTablero();
     }
 
     private void construirTablero() {

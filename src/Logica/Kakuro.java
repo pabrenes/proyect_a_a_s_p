@@ -13,11 +13,12 @@ import java.util.ArrayList;
 //up
 public class Kakuro implements Serializable {
 
-    static int[] numeros = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-    static int[] numeroMaximo = {9, 17, 24, 30, 35, 39, 42, 44, 45};
-    static int[] numeroMinimo = {1, 3, 6, 10, 15, 21, 28, 36, 45};
     private int[][] tablero;
     private Pista[][] pista;
+    private ArrayList<int[]> casillas;
+    private int totalCasillas;
+    private boolean solucion;
+    private long timeStart, timeEnd;
     /**
     Pablo de aquí para arriba declara sus variables
         ---------------+---------------
@@ -34,20 +35,20 @@ public class Kakuro implements Serializable {
     private  List<Integer> numFilas = new ArrayList<>();
     private  List<Integer> valoresDisponibles = new ArrayList<>();
     private int[][] KakuroVacio = {
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2,-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
     };
 
     /**
@@ -59,69 +60,163 @@ public class Kakuro implements Serializable {
         pista = new Pista[14][14];
     }
 
-
-    public void resolverKakuro(int fila, int columna) {
-
+    public void resolverKakuro() {
+        timeStart = System.currentTimeMillis();
+        casillas = obtenerCasillas();
+        totalCasillas = casillas.size();
+        solucion = false;
+        resolverKakuroBT(0);
+        timeEnd = System.currentTimeMillis();
+        System.out.println("La solución lineal ha tardado un total de: " + (timeEnd - timeStart) + " milisegundos");
     }
 
-    private boolean promete() {
-        boolean laVaraPromete = false;
-        return true;
+    private void resolverKakuroBT(int k) {
+        if (k == totalCasillas) {
+            solucion = true;
+        }
+        else {
+            int[] parOrdenado = casillas.get(k);
+            HashSet<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1]);
+            for (Integer sucesor : sucesores) {
+                tablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
+                resolverKakuroBT(k + 1);
+                if (solucion)
+                    break;
+                tablero[parOrdenado[0]][parOrdenado[1]] = 0;
+            }
+        }
     }
 
-    private ArrayList<Integer> obtenerSucesores(int fila, int columna) {
-        ArrayList<Integer> values = new ArrayList<>();                                                                  //Valores totales para los posibles sucesores
+    /**
+     * Función que retorna un ArrayList con todos los pares ordenados para cada casilla
+     * @return retorna un ArrayList de int[2]
+     */
+    private ArrayList<int[]> obtenerCasillas() {
+        ArrayList<int[]> paresOrdenados = new ArrayList<>();                                                            //Guardaré todas las posiciones [i, j] donde haya una casilla por llenar
+        int[] parOrdenado;                                                                                              //Variable temporal para almacenar un par ordenado
+        for (int i = 1; i < 14; i++) {
+            for (int j = 1; j < 14; j++) {
+                if (tablero[i][j] > -1) {                                                                               //Si se cumple que estoy en una casilla por llenar
+                    parOrdenado = new int[2];                                                                           //Creo un nuevo array de 2
+                    parOrdenado[0] = i;                                                                                 //Guardo el i
+                    parOrdenado[1] = j;                                                                                 //Guardo el j
+                    paresOrdenados.add(parOrdenado);                                                                    //Guardo el par ordenado
+                }
+            }
+        }
+        return paresOrdenados;
+    }
+
+    /**
+     * Función encargada de obtener los posibles valores para colocar en una casilla del kakuro en base a toda la
+     * información que interfiera en esta casilla
+     * @param fila Fila donde se encuentra la casilla
+     * @param columna Columna donde se encuentra la columna
+     * @return se retorna un SetHash con los valores que pueden ser colocados en esa casilla
+     */
+    private  HashSet<Integer> obtenerSucesores(int fila, int columna) {
+        HashSet<Integer> values;
+
         int[] pistas = getPistas(fila, columna);                                                                        //Obtengo la posición de las pistas en el tablero
-        int derecha, abajo, min;                                                                                        //Pista horizontal y vertical de la casilla y el minimo de estas
-        derecha = pista[fila][pistas[0]].getDerecha();                                                                  //Obtengo la pista horizontal
-        abajo = pista[pistas[1]][columna].getAbajo();                                                                   //Obtengo la pista vertical
-        ArrayList<Integer>[] runs = getRuns(fila, ++pistas[0], ++pistas[1], columna);                                   //Obtengo los datos de las runs
-        if (runs[0].remove(runs[0].size() - 1) == 1) {                                                            //Determino si no era la ultima casilla
-            derecha--;                                                                                                  //Si no es la ultima no puedo colocar el valor de la pista
-        }
-        derecha -= runs[0].remove(runs[0].size() - 1);                                                            //Determino la nueva pista horizontal
-        if (runs[1].remove(runs[1].size() - 1) == 0) {                                                            //Determino si era la ultima casilla
-            abajo--;                                                                                                    //Si no es la ultima no puedo colocar el valor de la pista
-        }
-        abajo -= runs[1].remove(runs[1].size() - 1);                                                              //Determino la nueva pista vertical
-        min = Math.min(derecha, abajo);                                                                                 //El valor de la mista está dado por el menor
-        if (min > 9) {
-            min = 9;                                                                                                    //Si es mayor a 9 baje a 9
-            for (int i = min - 1; i > -1; i--) {                                                                        //Solo puedo colocar números menores al mínimo (ves static array numeros)
-                values.add(numeros[i]);                                                                                 //Agrega el valor
-            }
-        } else {
-            for (int i = 0; i < min; i++) {                                                                             //Solo puedo colocar números menores al mínimo (ves static array numeros)
-                values.add(numeros[i]);                                                                                 //Agrega el valor
-            }
-        }
+        int pHoriz, pVerti;                                                                                             //Pista horizontal y vertical de la casilla
+        int totalD, totalA;                                                                                             //Total de casillas en la run horizontal y vertical
+
+        pHoriz = pista[fila][pistas[0]].getDerecha();                                                                   //Obtengo la pista horizontal
+        pVerti = pista[pistas[1]][columna].getAbajo();                                                                  //Obtengo la pista vertical
+
+        ArrayList<Integer>[] runs = getRuns(fila, pistas[0] + 1, pistas[1] + 1, columna);               //Obtengo los datos de las runs (ver doc de la función)
+
+        //Se usa la cantidad de casillas para calcular permutaciones disponibles para cierta pista en esa cantidad de casillas
+        //Este dato es variable, cuando se avanza a una casilla dependiente de una run, se trata como si fuera otra run totalmente distinta
+        //Por ejemplo considere una run de 4 casillas, si coloqué un valor en en la primera, entonces la segunda se trata como si solo fuera de 3 casillas.
+        totalD = runs[0].remove(runs[0].size() - 1);                                                             //Determino la nueva pista horizontal
+        totalA = runs[1].remove(runs[1].size() - 1);                                                             //Determino la nueva pista horizontal
+
+        //Para la poda se crean "Nuevas pistas" para hacer el árbol de soluciones más pequeño.
+        //La nueva pista consiste en tomar la pista de la run original y restarle la suma de los valores ya puestos en la run
+        //Por ende toda casilla termina con una pista totalmente diferente a cualquier otra casilla
+        pHoriz -= runs[0].remove(runs[0].size() - 1);                                                             //Determino la nueva pista horizontal
+        pVerti -= runs[1].remove(runs[1].size() - 1);                                                             //Determino la nueva pista vertical
+
+        //Esta función crea los valores con los que se puede formar una pista con cierta cantidad de casillas
+        //Puede notar que la cantidad de casillas se manipula, para recrear el ejemplo de que el total de casillas es variable antes mencionado
+        values = new HashSet<>(permutaciones((totalD - (columna - pistas[0])) + 1, pHoriz));                    //Obtengo los posibles valores para formar una pista en tantas casillas
+        values.retainAll(permutaciones((totalA - (fila - pistas[1])) + 1, pVerti));                             //Obtengo los posibles valores para formar una pista en tantas casillas
+
+        //Entre los datos que se obtienen de las runs son los valores ya colocados en la fila y columna, se remueven todos de la posible solución
+        //Ya que no pueden repetirse
         values.removeAll(runs[0]);                                                                                      //Elimino repetidos horizontalmente
         values.removeAll(runs[1]);                                                                                      //Elimino repetidos verticalmente
+
         return values;
     }
 
+    /**
+     * Función que determina los datos de dos runs para una casilla dada, retorna un arreglo de dos espacios de arreglos
+     * dinámicos con la siguiente información:
+     *      • Todos los valores de las casillas en orden de la pista de la run deseada hasta el final de la run
+     *      • La suma de todos los valores anteriormente dado
+     *      • La cantidad de casillas que fueron leídas (tamaño de la run)
+     *  Es importante recordar:
+     *      • Siempre el último elemento del array es la cantidad de casillas
+     *      • Siempre el penúltimo elemento del array es la suma de todos los valores en la run
+     * @param filaD int que corresponde a la fila en la cual se encuentra la pista horizontal para la run
+     * @param columnaD int que corresponde a la columna en la cual se encuentra la pista horizontal para la run
+     * @param filaA int que corresponde a la fila en la cual se encuentra la pista vertical para la run
+     * @param columnaA int que corresponde a la columna en la cual se encuentra la pista vertical para la run
+     * @return Se retorna un arreglo de tamaño dos con dos arreglos de tamaño dinámico (especificados antes)
+     */
     private ArrayList<Integer>[] getRuns(int filaD, int columnaD, int filaA, int columnaA) {
         ArrayList<Integer>[] runs = new ArrayList[2];                                                                   //Contenedor para los valores en las runs
-        int sumaD = 0, sumaA = 0;                                                                                       //Control para la suma
+        int sumaD = 0, sumaA = 0, totalD = 0, totalA = 0;                                                               //Control para la suma y casillas para la run
         runs[0] = new ArrayList<>();
         runs[1] = new ArrayList<>();
         //Se determinan todos los valores en la run horizontal para una casilla, además de la suma de estos valores
-        while (columnaD < 14 && tablero[filaD][columnaD] > 0) {                                                         //Mientras no me salga del kakuro y sea un valor válido
-            runs[0].add(tablero[filaD][columnaD]);                                                                      //Agrege valor al arreglo
+        while (columnaD < 14 && tablero[filaD][columnaD] > -1) {                                                        //Mientras no me salga del kakuro y sea un valor de la run
+            runs[0].add(tablero[filaD][columnaD]);                                                                      //Agrege valor al set
             sumaD += tablero[filaD][columnaD++];                                                                        //Sume el valor
+            totalD++;                                                                                                   //Hay un valor más
         }
-        runs[0].add(sumaD);                                                                                             //Se agrega la suma al arreglo.
-        int bool = (columnaA + 1 < 14 && tablero[filaD][columnaA + 1] > -1) ? 1 : 0;                                    //Se determina si no es la ultima casilla de la run
-        runs[0].add(bool);
+        runs[0].add(sumaD);                                                                                             //Se agrega la suma actual
+        runs[0].add(totalD);                                                                                            //Se agrega la cantidad de casillas
         //Se determinan todos los valores en la run vertical para una casilla, además de la suma de estos valores
-        while (filaA < 14 && tablero[filaA][columnaA] > 0) {                                                            //Mientras no me salga del kakuro y sea un valor válido
-            runs[1].add(tablero[filaA][columnaA]);                                                                      //Agrege valor al arreglo
+        while (filaA < 14 && tablero[filaA][columnaA] > -1) {                                                           //Mientras no me salga del kakuro y sea un valor de la run
+            runs[1].add(tablero[filaA][columnaA]);                                                                      //Agrege valor al set
             sumaA += tablero[filaA++][columnaA];                                                                        //Sume el valor
+            totalA++;
         }
-        runs[1].add(sumaA);                                                                                             //Se agrega la suma al arreglo.
-        bool = (filaD + 1 < 14 && tablero[filaD + 1][columnaA] > -1) ? 1 : 0;                                           //Se determina si no es la ultima casilla de la run
-        runs[1].add(bool);                                                                                              //Agrego el valor de la sentencia anterior
+        runs[1].add(sumaA);                                                                                             //Se agrega la suma actual
+        runs[1].add(totalA);                                                                                            //Se agrega la cantidad de casillas
         return runs;
+    }
+
+    /**
+     * Función que dado dos ints, una fila y una columna correspondientes a una casilla del kakuro, retornará otro par
+     * de tal manera que la fila de parámetro más la columna que se retorna formen la pista horizontal para la casilla
+     * de igual manera en base a la columna retorna la fila de manera que se construya la pista vertical para la casilla
+     * @param fila Fila en la que se encuentra la casilla (empieza en 0)
+     * @param columna Columna donde se encuentra la casilla (empieza en 0)
+     * @return se retrona un vector de dos ints [columna, fila], para formar dos pares nuevos con los parámetros.
+     */
+    private int[] getPistas(int fila, int columna) {
+
+        int[] pista = new int[4];                                                                                       //Contenedor de las pistas
+
+        for (int i = columna - 1; i > -1; i--) {                                                                        //Determino la pista horizontal
+            if (tablero[fila][i] == -1) {                                                                               //La pista está donde haya un -1 más próximo
+                pista[0] = i;                                                                                           //Guardo el índice (solo la columna, ya tengo la fila)
+                break;                                                                                                  //No me interesa terminar los ciclos
+            }
+        }
+
+        for (int i = fila - 1; i > -1; i--) {                                                                           //Determino la pista vertical de la casilla
+            if (tablero[i][columna] == -1) {                                                                            //La pista está donde haya un -1 más próximo
+                pista[1] = i;                                                                                           //Guardo el índice (solo la fila, ya tengo la columna)
+                break;                                                                                                  //No me interesa terminar los ciclos
+            }
+        }
+
+        return pista;
     }
 
     /**
@@ -210,31 +305,6 @@ public class Kakuro implements Serializable {
             idx++;                                                                                                      //Desplazece
         } //Al arreglo estar ordenado me garantiza que si encuentro un valor mayor, exista la posibilidad de que mi indice actual apunte al valor, sino nunca existio
         return (idx < tamano && vector[idx] == valor); //Se retorna directamente si el valor quedó en mi último índice o no
-    }
-
-    /**
-     * Función que dado dos ints, una fila y una columna correspondientes a una casilla del kakuro, retornará otro par
-     * de tal manera que la fila de parámetro más la columna que se retorna formen la pista horizontal para la casilla
-     * de igual manera en base a la columna retorna la fila de manera que se construya la pista vertical para la casilla
-     * @param fila Fila en la que se encuentra la casilla (empieza en 0)
-     * @param columna Columna donde se encuentra la casilla (empieza en 0)
-     * @return se retrona un vector de dos ints [columna, fila], para formar dos pares nuevos con los parámetros.
-     */
-    private int[] getPistas(int fila, int columna) {
-        int[] pista = new int[2];                                                                                       //Contenedor de las pistas
-        for (int i = fila - 1; i > -1; i--) {                                                                           //Determino la pista vertical de la casilla
-            if (tablero[i][columna] == -1) {                                                                            //La pista está donde haya un -1 más próximo
-                pista[1] = i;                                                                                           //Guardo el índice (solo la fila, ya tengo la columna)
-                break;                                                                                                  //No me interesa terminar los ciclos
-            }
-        }
-        for (int i = columna - 1; i > -1; i--) {                                                                        //Determino la pista horizontal
-            if (tablero[fila][i] == -1) {                                                                               //La pista está donde haya un -1 más próximo
-                pista[0] = i;                                                                                           //Guardo el índice (solo la columna, ya tengo la fila)
-                break;                                                                                                  //No me interesa terminar los ciclos
-            }
-        }
-        return pista;
     }
 
     /**
