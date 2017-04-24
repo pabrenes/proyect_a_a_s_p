@@ -18,7 +18,9 @@ public class Kakuro implements Serializable {
     private ArrayList<int[]> casillas;
     private int totalCasillas;
     private boolean solucion;
-    private long totalTime, timeEnd;
+    private long totalTime, timeEnd, timeStart;
+    private ArrayList<Long> tiempos;
+    private ArrayList<Integer> casillasColocadas;
     /**
     Pablo de aquí para arriba declara sus variables
         ---------------+---------------
@@ -66,12 +68,37 @@ public class Kakuro implements Serializable {
      * También inicia variables requeridas para el BT
      */
     public void resolverKakuro() {
-        long timeStart = System.currentTimeMillis();
+        timeStart = System.nanoTime();
         casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
         totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
+        tiempos = new ArrayList<>();
+        casillasColocadas = new ArrayList<>();
         solucion = false;
         resolverKakuroBT(0);
         totalTime = timeEnd - timeStart;
+        /*
+        for (int i = 0; i < tiempos.size(); i++) {
+            double time = (tiempos.get(i) - timeStart)/100;
+            time /= 100;
+            time /= 100;
+            System.out.println("Colocadas " + casillasColocadas.get(i) + " casillas a los: " + time + " milisegundos");
+        }
+        */
+        System.out.print("[");
+        for (int k : casillasColocadas ) {
+            System.out.print(k + ", ");
+        }
+        System.out.print("]");
+        System.out.println();
+        System.out.print("[");
+        for (Long time : tiempos ) {
+            double mls = (time - timeStart) / 100;
+            mls /= 100;
+            mls /= 100;
+            System.out.print(mls + ", ");
+        }
+        System.out.print("]");
+        System.out.println();
     }
 
     /**
@@ -82,7 +109,7 @@ public class Kakuro implements Serializable {
     private void resolverKakuroBT(int k) {
         if (k == totalCasillas) {                                                                                       //Solución encontrada
             solucion = true;
-            timeEnd = System.currentTimeMillis();
+            timeEnd = System.nanoTime();
         }
         else {                                                                                                          //Aún no hay solución
             int[] parOrdenado = casillas.get(k);                                                                        //Obtengo los pares ordenados a trabajar según el k
@@ -92,6 +119,8 @@ public class Kakuro implements Serializable {
             //Por lo que simplemente no intenta realizar nuevas conmparaciones y regresa para enmendar el error
             for (Integer sucesor : sucesores) {                                                                         //Para cada sucesor explore los siguientes sucessores
                 tablero[parOrdenado[0]][parOrdenado[1]] = sucesor;                                                      //Agregue el posible valor al tablero
+                casillasColocadas.add(k + 1);
+                tiempos.add(System.nanoTime());
                 resolverKakuroBT(k + 1);                                                                             //Explore según el posible valor anterior
                 if (solucion)                                                                                           //Si ya se encontró solución, corte
                     break;

@@ -52,7 +52,8 @@ public class Controlador implements Initializable {
         lines = new ArrayList<>();
         kakuro = new Kakuro();
 
-        setKakuroPruebaHard();
+        setKakuroPrueba();
+        //setKakuroPruebaHard();
 
         construirTablero();
 
@@ -67,7 +68,10 @@ public class Controlador implements Initializable {
     private void resolver() {
         kakuro.resolverKakuro();
         construirTablero();
-        tiempo.setText("Tiempo total: \n" + kakuro.getTotalTime() + " milisegundos");
+        double time = kakuro.getTotalTime()/1000;
+        time /= 1000;
+        tiempo.setText("Tiempo total: \n" + time + " milisegundos");
+        resolver.setDisable(true);
     }
 
     private void construirTablero() {
