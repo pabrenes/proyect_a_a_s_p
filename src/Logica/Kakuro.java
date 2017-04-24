@@ -240,7 +240,7 @@ public class Kakuro implements Serializable {
      * @param casillas Tamaño total de casillas que se utilizan para formar la pista dada
      * @param pista La suma que debe formar los numeros puestos en cada casilla sin repetirse
      */
-    public HashSet<Integer> permutaciones(int casillas, int pista) {
+    private HashSet<Integer> permutaciones(int casillas, int pista) {
         HashSet<Integer> valores = new HashSet<>();
         if (casillas != 1) {
             int[] vector = new int[casillas];
@@ -268,7 +268,6 @@ public class Kakuro implements Serializable {
             for (int dato : casillas) {                                                                                 //Se almacenan los valores
                 valores.add(dato);                                                                                      //Mi poda garantiza que en este punto es solución SIEMPRE
             }
-            return;
         } else {
             //Se exploran los valores prometedores para solución (Se poda)
             for (int i = 1; i < 10; i++) {
