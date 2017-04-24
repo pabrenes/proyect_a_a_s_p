@@ -102,6 +102,18 @@ public class Kakuro implements Serializable {
     }
 
     /**
+     * Función encargada de crear el primer hilo para crear una solución paralelizada por hilos
+     */
+    public void resolverKakuroParalelo() {
+        casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
+        totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
+        Hilo hilo = new Hilo(tablero, 0);
+        hilo.setTopeHilos(100);
+        hilo.setKakuro(this);
+        hilo.start();
+    }
+
+    /**
      * Función que resuelve un kakuro con metodología BT
      * La Función de poda se encuentra en otro método, aquí solo se llama para obtener los posibles sucesores
      * @param k int para avanzar a la siguiente solución prometedora
@@ -156,7 +168,7 @@ public class Kakuro implements Serializable {
      * @param columna Columna donde se encuentra la columna
      * @return se retorna un SetHash con los valores que pueden ser colocados en esa casilla
      */
-    private  HashSet<Integer> obtenerSucesores(int fila, int columna) {
+    protected HashSet<Integer> obtenerSucesores(int fila, int columna) {
         HashSet<Integer> values;
 
         int[] pistas = getPistas(fila, columna);                                                                        //Obtengo la posición de las pistas en el tablero
@@ -430,6 +442,22 @@ public class Kakuro implements Serializable {
      */
     public long getTotalTime() {
         return totalTime;
+    }
+
+    /**
+     * Función para obtener las casillas a llenar
+     * @return retorna el arreglo con las casillas a llenar
+     */
+    ArrayList<int[]> getCasillas() {
+        return casillas;
+    }
+
+    /**
+     * Función para obtener el total de casillas
+     * @return retorna el int con el tamaño total de casillas a llenar
+     */
+    int getTotalCasillas() {
+        return totalCasillas;
     }
 
     /**

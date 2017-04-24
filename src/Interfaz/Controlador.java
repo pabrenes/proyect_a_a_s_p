@@ -59,10 +59,16 @@ public class Controlador implements Initializable {
 
         guardar.setOnAction(event -> System.out.println("Guardando..."));
 
-        cargar.setOnAction(event -> System.out.println("Cargando..."));
+        cargar.setOnAction(event -> resolverThreads());
 
         resolver.setOnAction(event -> resolver());
 
+        generar.setOnAction(event -> construirTablero());
+
+    }
+
+    private void resolverThreads() {
+        kakuro.resolverKakuroParalelo();
     }
 
     private void resolver() {
