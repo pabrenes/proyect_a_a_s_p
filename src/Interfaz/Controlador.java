@@ -37,6 +37,10 @@ public class Controlador implements Initializable {
     Button cargar;
     @FXML
     Button resolver;
+    @FXML
+    Button generar;
+    @FXML
+    Label tiempo;
 
     //Atributos para clase
     private Kakuro kakuro;
@@ -61,9 +65,9 @@ public class Controlador implements Initializable {
     }
 
     private void resolver() {
-        System.out.println("Resolviendo...");
         kakuro.resolverKakuro();
         construirTablero();
+        tiempo.setText("Tiempo total: \n" + kakuro.getTotalTime() + " milisegundos");
     }
 
     private void construirTablero() {

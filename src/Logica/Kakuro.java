@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *              Jeison  Esquivel - 2013018886
  * 14 abr 2017.
  */
-//up
+
 public class Kakuro implements Serializable {
 
     private int[][] tablero;
@@ -18,7 +18,7 @@ public class Kakuro implements Serializable {
     private ArrayList<int[]> casillas;
     private int totalCasillas;
     private boolean solucion;
-    private long timeStart, timeEnd;
+    private long totalTime;
     /**
     Pablo de aquí para arriba declara sus variables
         ---------------+---------------
@@ -60,29 +60,42 @@ public class Kakuro implements Serializable {
         pista = new Pista[14][14];
     }
 
+    /**
+     * Función que inicia la recursión del BT para generar una solución a un kakuro
+     * Toma también el tiempo resultado de encontrar una solución
+     * También inicia variables requeridas para el BT
+     */
     public void resolverKakuro() {
-        timeStart = System.currentTimeMillis();
-        casillas = obtenerCasillas();
-        totalCasillas = casillas.size();
+        long timeStart = System.currentTimeMillis();
+        casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
+        totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
         solucion = false;
         resolverKakuroBT(0);
-        timeEnd = System.currentTimeMillis();
-        System.out.println("La solución lineal ha tardado un total de: " + (timeEnd - timeStart) + " milisegundos");
+        long timeEnd = System.currentTimeMillis();
+        totalTime = timeEnd - timeStart;
     }
 
+    /**
+     * Función que resuelve un kakuro con metodología BT
+     * La Función de poda se encuentra en otro método, aquí solo se llama para obtener los posibles sucesores
+     * @param k int para avanzar a la siguiente solución prometedora
+     */
     private void resolverKakuroBT(int k) {
-        if (k == totalCasillas) {
+        if (k == totalCasillas) {                                                                                       //Solución encontrada
             solucion = true;
         }
-        else {
-            int[] parOrdenado = casillas.get(k);
-            HashSet<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1]);
-            for (Integer sucesor : sucesores) {
-                tablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
-                resolverKakuroBT(k + 1);
-                if (solucion)
+        else {                                                                                                          //Aún no hay solución
+            int[] parOrdenado = casillas.get(k);                                                                        //Obtengo los pares ordenados a trabajar según el k
+            HashSet<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1]);                              //Obtengo los sucesores para esa casilla
+            //Una desición erronea tomada anteriormente genera que no encuentre valores posibles para que el kakuro obtenga una solución
+            //Sucesores puede ser generada de manera vacía, lo que indica que atrás hubo un valor no correcto
+            //Por lo que simplemente no intenta realizar nuevas conmparaciones y regresa para enmendar el error
+            for (Integer sucesor : sucesores) {                                                                         //Para cada sucesor explore los siguientes sucessores
+                tablero[parOrdenado[0]][parOrdenado[1]] = sucesor;                                                      //Agregue el posible valor al tablero
+                resolverKakuroBT(k + 1);                                                                             //Explore según el posible valor anterior
+                if (solucion)                                                                                           //Si ya se encontró solución, corte
                     break;
-                tablero[parOrdenado[0]][parOrdenado[1]] = 0;
+                tablero[parOrdenado[0]][parOrdenado[1]] = 0;                                                            //Desaga el cambio en caso de no valor
             }
         }
     }
@@ -381,6 +394,14 @@ public class Kakuro implements Serializable {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Archivo incorrecto o corrupto");
         }
+    }
+
+    /**
+     * Obtener el tiempo de ejecución
+     * @return retorna un long con el tiempo en milisegundos total de ejecución
+     */
+    public long getTotalTime() {
+        return totalTime;
     }
 
     /**
