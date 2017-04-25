@@ -78,8 +78,7 @@ public class Controlador implements Initializable {
 
         resolverThreads.setOnAction(event -> resolverThread());
 
-        generar.setDisable(true);
-        generar.setOnAction(event -> System.out.println("Generando..."));
+        generar.setOnAction(event -> generar());
 
         resolver.setOnAction(event -> resolver());
 
@@ -95,6 +94,13 @@ public class Controlador implements Initializable {
             kakuro.resolverKakuroParalelo(cantidadHilos);
 
         }
+    }
+
+    private void generar() {
+        kakuro = new Kakuro();
+        kakuro.setTablero(kakuro.LlenarKakuro());
+        construirTablero();
+        System.gc();
     }
 
     private void resolver() {

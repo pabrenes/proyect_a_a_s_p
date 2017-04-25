@@ -27,7 +27,7 @@ public class HiloSolucionador extends Thread{
     public void run() {
         resolverKakuroBT(k);
         hilosEnEjecucion--;
-
+        System.gc();
     }
 
     private void resolverKakuroBT(int k) {

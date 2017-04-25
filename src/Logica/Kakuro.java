@@ -35,22 +35,7 @@ public class Kakuro implements Serializable {
     private List<Integer> numColumn = new ArrayList<>();
     private  List<Integer> numFilas = new ArrayList<>();
     private  List<Integer> valoresDisponibles = new ArrayList<>();
-    private int[][] KakuroVacio = {
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-    };
+    private int[][] KakuroVacio;
 
     /**
      * Builder para la clase kakuro
@@ -59,6 +44,10 @@ public class Kakuro implements Serializable {
     public Kakuro() {
         tablero = new int[14][14];
         pista = new Pista[14][14];
+        KakuroVacio = new int[14][14];
+        for (int[] fila : KakuroVacio) {
+            Arrays.fill(fila, -2);
+        }
     }
 
     /**
@@ -84,6 +73,7 @@ public class Kakuro implements Serializable {
             System.out.println("Colocadas " + casillasColocadas.get(i) + " casillas a los: " + time + " milisegundos");
         }
         */
+        /*
         System.out.print("[");
         for (int k : casillasColocadas ) {
             System.out.print(k + ", ");
@@ -98,7 +88,7 @@ public class Kakuro implements Serializable {
             System.out.print(mls + ", ");
         }
         System.out.print("]");
-        System.out.println();
+        System.out.println();*/
     }
 
     /**
@@ -543,16 +533,6 @@ public class Kakuro implements Serializable {
     //                          *
     */
 
-    public void Imprimir() {
-        for (int i = 0; i < 14; i++) {
-            for (int j = 0; j < 14; j++) {
-                System.out.println(KakuroVacio[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-
-
     public List numInComlumnas(int fila, int columna) {
         numColumn.clear();
         int puntero = 1;
@@ -567,8 +547,6 @@ public class Kakuro implements Serializable {
         }
         return numColumn;
     }
-
-    ;
 
     public List numInFilas(int fila, int columna) {
         numFilas.clear();
@@ -585,13 +563,10 @@ public class Kakuro implements Serializable {
         return numFilas;
     }
 
-    ;
-
-
-    /*
- cuanta la cantidad de casillas usadas en fila
- si es menor a 10 entonces puede ingresar mas filas
- */
+    /**
+     *   cuanta la cantidad de casillas usadas en fila
+     *   si es menor a 10 entonces puede ingresar mas filas
+     */
     public boolean CantCasilasUsadasFila(int fila) {
         int cantidad = 0;
         for (int j = 1; j < 14; j++) {
@@ -602,12 +577,10 @@ public class Kakuro implements Serializable {
         return (cantidad < 10);
     }
 
-    ;
-      /*
-    cuanta la cantidad de casillas usadas en columna
-    si es menor a 10 entonces puede ingresar mas filas
-    */
-
+    /**
+     * cuanta la cantidad de casillas usadas en columna
+     *si es menor a 10 entonces puede ingresar mas filas
+     */
     public boolean CantCasilasUsadasColumna(int columna) {
         int cantidad = 0;
         for (int i = 1; i < 14; i++) {
@@ -618,12 +591,6 @@ public class Kakuro implements Serializable {
         return (cantidad < 10);
     }
 
-
-
-
-
-    ;
-
     public List ConjuntoPrometedor(int fila, int columna) {
         List<Integer> copy = new ArrayList<Integer>(dominio);
         List conjuntoFila = numInFilas(fila, columna);
@@ -633,12 +600,10 @@ public class Kakuro implements Serializable {
         return copy;
     }
 
-
-
-/* retorna 1 -> llenar a huevo
-           0 -> aleatorio
-          -1 -> no disponible
- */
+    /** retorna 1 -> llenar a huevo
+     *          0 -> aleatorio
+     *         -1 -> no disponible
+     */
     public int esCasillaDisponible(int fila, int columna) {
         if (CantCasilasUsadasFila(fila) && CantCasilasUsadasColumna(columna)) {
             if (KakuroVacio[fila][columna - 1] < 0) { // analiza si la columna anterior es vacia
@@ -664,9 +629,6 @@ public class Kakuro implements Serializable {
         return -1;
     }
 
-
-
-
     public void ProcesarSolucion(int fila,int columna, int desicion) {
         Random vaCasilla = new Random();                                      /*0=no va casilla/ 1 si va casilla */
         Random rnd = new Random();                                               /* valor random*/
@@ -679,26 +641,22 @@ public class Kakuro implements Serializable {
                 if (!disponiblesColumna.contains(valor)&& !disponiblesFila.contains(valor)){
                     KakuroVacio[fila][columna]=valor;
                 }else{
-                 List conjPometedor =ConjuntoPrometedor(fila,columna);
-                 if (!conjPometedor.isEmpty())
-                     KakuroVacio[fila][columna]=(int) conjPometedor.get(0);
-                }break;
-
+                    List conjPometedor =ConjuntoPrometedor(fila,columna);
+                    if (!conjPometedor.isEmpty())
+                        KakuroVacio[fila][columna]=(int) conjPometedor.get(0);
+                }
+                break;
             case 0:
-                if (rnd.nextInt(10)>5){
+                if (rnd.nextInt(19)>5){
                     List conjPometedor =ConjuntoPrometedor(fila,columna);
                     if (!conjPometedor.isEmpty()){
                         valor=(int) conjPometedor.get(0);
                         KakuroVacio[fila][columna]=valor;}
-                }break;
-
-            default:
-                return;
+                }
+                break;
         }
     }
 
-
-    //falta mejor considerablemente esta funcion  -.-
     public int[][] LlenarKakuro() {
         int valor;
         for (int i = 1; i < 13; i++) {
@@ -710,7 +668,6 @@ public class Kakuro implements Serializable {
         GenerarPistas();
         return KakuroVacio;
     }
-
 
     public int  sumaAbajo(int fila, int columna) {
         int suma = 0;
@@ -734,7 +691,6 @@ public class Kakuro implements Serializable {
         }
         return suma;
     }
-
 
     public void GenerarPistas(){
         int abajo;
@@ -778,5 +734,4 @@ public class Kakuro implements Serializable {
         }
     }
 
-
-};
+}
