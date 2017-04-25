@@ -631,7 +631,7 @@ public class Kakuro implements Serializable {
         copy.removeAll(conjuntoColumna);
         copy.removeAll(conjuntoFila);
         return copy;
-    };
+    }
 
 
 
