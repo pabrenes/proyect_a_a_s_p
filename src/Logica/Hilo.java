@@ -43,7 +43,7 @@ public class Hilo extends Thread{
             HashSet<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
             for (Integer sucesor : sucesores) {
                 copiaTablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
-                if (hilosEnEjecucion <= topeHilos){
+                if (hilosEnEjecucion < topeHilos){
                     hilosEnEjecucion++;
                     new Hilo(copiaTablero(), k + 1).start();
                 } else {

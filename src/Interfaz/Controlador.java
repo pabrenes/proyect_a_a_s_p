@@ -7,13 +7,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -26,23 +29,29 @@ import java.util.ResourceBundle;
 
 public class Controlador implements Initializable {
 
-    //Atributos para los objetos graficos
     @FXML
     Pane panel;
     @FXML
     GridPane tablero;
     @FXML
-    Button guardar;
+    TextArea log;
     @FXML
-    Button cargar;
+    Button generarForks;
     @FXML
-    Button resolver;
+    Button resolverForks;
+    @FXML
+    Button generarThreads;
+    @FXML
+    Button resolverThreads;
     @FXML
     Button generar;
     @FXML
-    Label tiempo;
+    Button resolver;
+    @FXML
+    Button cargar;
+    @FXML
+    Button guardar;
 
-    //Atributos para clase
     private Kakuro kakuro;
     private ArrayList<Group> lines;
 
@@ -52,22 +61,33 @@ public class Controlador implements Initializable {
         lines = new ArrayList<>();
         kakuro = new Kakuro();
 
-        //setKakuroPrueba();
-        setKakuroPruebaHard();
-
         construirTablero();
 
-        guardar.setOnAction(event -> System.out.println("Guardando..."));
+        log.setEditable(false);
 
-        cargar.setOnAction(event -> resolverThreads());
+        generarForks.setDisable(true);
+        generarForks.setOnAction(event -> System.out.println("Generando con forks..."));
+
+        resolverForks.setDisable(true);
+        resolverForks.setOnAction(event -> System.out.println("Resolviendo con forks..."));
+
+        generarThreads.setDisable(true);
+        generarThreads.setOnAction(event -> System.out.println("Generando con hilos..."));
+
+        resolverThreads.setOnAction(event -> resolverThread());
+
+        generar.setDisable(true);
+        generar.setOnAction(event -> System.out.println("Generando..."));
 
         resolver.setOnAction(event -> resolver());
 
-        generar.setOnAction(event -> construirTablero());
+        cargar.setOnAction(event -> loadKakuro());
+
+        guardar.setOnAction(event -> saveKakuro());
 
     }
 
-    private void resolverThreads() {
+    private void resolverThread() {
         kakuro.resolverKakuroParalelo();
     }
 
@@ -76,8 +96,37 @@ public class Controlador implements Initializable {
         construirTablero();
         double time = kakuro.getTotalTime()/1000;
         time /= 1000;
-        tiempo.setText("Tiempo total: \n" + time + " milisegundos");
+        //tiempo.setText("Tiempo total: \n" + time + " milisegundos");
+        System.out.println(time);
         resolver.setDisable(true);
+    }
+
+    private void saveKakuro() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar Kakuro");
+        configureFileChooser(fileChooser);
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            kakuro.guardarKakuro(file.getPath());
+        }
+    }
+
+    private void loadKakuro() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Cargar Kakuro");
+        configureFileChooser(fileChooser);
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            kakuro.cargarKakuro(file.getPath());
+            construirTablero();
+        }
+    }
+
+    private void configureFileChooser(FileChooser fileChooser) {
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")  + "/Desktop"));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Kakuros", "*.kak")
+        );
     }
 
     private void construirTablero() {
@@ -135,8 +184,8 @@ public class Controlador implements Initializable {
     }
 
     private void setLine(int fila, int columna) {
-        double inicioX = 10.0 + 6.0 + (42.0 * columna);
-        double inicioY = 10.0 + 6.0 + (42.0 * fila);
+        double inicioX = 20.0 + 6.0 + (42.0 * columna);
+        double inicioY = 20.0 + 6.0 + (42.0 * fila);
         if (columna < 8)
             inicioX -= columna;
         else
@@ -170,167 +219,5 @@ public class Controlador implements Initializable {
             panel.getChildren().add(linea);
         }
     }
-
-    private void setKakuroPruebaHard() {
-        int[][]tablero = {
-                {-2, -2, -1, -1, -2, -2, -2, -1, -1, -2, -2, -1, -1, -2},
-                {-2, -1,  0,  0, -1, -1, -1,  0,  0, -2, -1,  0,  0, -2},
-                {-1,  0,  0,  0,  0,  0, -1,  0,  0, -1, -1,  0,  0, -2},
-                {-1,  0,  0, -1,  0,  0,  0,  0, -1,  0,  0,  0,  0, -2},
-                {-1,  0,  0,  0, -1,  0,  0, -1,  0,  0,  0, -1, -1, -2},
-                {-2, -1,  0,  0, -1,  0,  0,  0,  0, -1,  0,  0,  0, -2},
-                {-1,  0,  0,  0,  0, -1, -1,  0,  0,  0, -1,  0,  0, -2},
-                {-1,  0,  0, -1,  0,  0,  0, -1, -1,  0,  0,  0,  0, -2},
-                {-1,  0,  0,  0, -1,  0,  0,  0,  0, -1,  0,  0, -1, -2},
-                {-2, -1, -1,  0,  0,  0, -1,  0,  0, -1,  0,  0,  0, -2},
-                {-1,  0,  0,  0,  0, -1,  0,  0,  0,  0, -1,  0,  0, -2},
-                {-1,  0,  0, -2, -1,  0,  0, -1,  0,  0,  0,  0,  0, -2},
-                {-1,  0,  0, -2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -2},
-                {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        };
-
-        kakuro.setTablero(tablero);
-
-        int [][] pistas = {
-                {0,  2  , 0, 42},
-                {0,  3  , 0, 11},
-                {0,  7  , 0, 19},
-                {0,  8  , 0, 9},
-                {0,  11 , 0, 6},
-                {0,  12 , 0, 18},
-                {1,  1  , 9, 12},
-                {1,  4  , 0, 13},
-                {1,  5  , 0, 15},
-                {1,  6  , 16, 0},
-                {1,  10 , 6, 0},
-                {2,  0  , 15, 0},
-                {2,  6  , 6, 6},
-                {2,  9  , 0, 6},
-                {2,  10 , 11, 22},
-                {3,  0  , 13, 0},
-                {3,  3  , 17, 18},
-                {3,  8  , 20, 17},
-                {4,  0  , 24, 0},
-                {4,  4  , 4, 0},
-                {4,  7  , 15, 7},
-                {4,  11  , 0, 38},
-                {4,  12 , 0, 7},
-                {5,  1  , 15, 20},
-                {5,  4  , 13, 7},
-                {5,  9  , 15, 9},
-                {6,  0  , 20, 0},
-                {6,  5  , 0, 12},
-                {6,  6  , 22, 11},
-                {6,  10 , 4, 13},
-                {7,  0  , 12, 0},
-                {7,  3  , 6, 11},
-                {7,  7  , 0, 18},
-                {7,  8  , 10, 24},
-                {8,  0  , 16, 0},
-                {8,  4  , 28, 9},
-                {8,  9  , 9, 0},
-                {8,  12 , 0, 23},
-                {9,  1  , 0, 19},
-                {9,  2  , 8, 23},
-                {9,  6  , 17, 13},
-                {9,  9  , 18, 3},
-                {10, 0  , 22, 0},
-                {10, 5  , 14, 11},
-                {10, 10 , 10, 6},
-                {11, 0  , 14, 0},
-                {11, 4  , 4, 0},
-                {11, 7  , 22, 0},
-                {12, 0  , 16, 0},
-                {12, 4  , 13, 0},
-                {12, 9  , 14, 0},
-        };
-        for (int[] cuarteto : pistas) {
-            kakuro.ingresarPista(cuarteto[0], cuarteto[1], cuarteto[2], cuarteto[3]);
-        }
-    }
-
-    private void setKakuroPrueba() {
-
-        int[][] tablero = {
-                {-2, -1, -1, -2, -2, -1, -1, -2, -2, -2, -1, -1, -2, -2},
-                {-1,  0,  0, -2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -2},
-                {-1,  0,  0, -1,  0,  0,  0, -1, -1,  0,  0,  0, -1, -2},
-                {-2, -1,  0,  0,  0, -1,  0,  0, -1,  0,  0,  0,  0, -2},
-                {-2, -2, -1,  0,  0,  0, -1,  0,  0, -2, -1,  0,  0, -2},
-                {-2, -1, -1,  0,  0,  0, -1,  0,  0, -1,  0,  0, -1, -2},
-                {-1,  0,  0,  0, -2, -1,  0,  0, -2, -1,  0,  0,  0, -2},
-                {-1,  0,  0,  0, -2, -1,  0,  0, -1, -1,  0,  0,  0, -2},
-                {-2, -1,  0,  0, -1,  0,  0, -1,  0,  0,  0, -2, -2, -2},
-                {-1,  0,  0, -1, -1,  0,  0, -1,  0,  0,  0, -1, -2, -2},
-                {-1,  0,  0,  0,  0, -1,  0,  0, -1,  0,  0,  0, -1, -2},
-                {-2, -1,  0,  0,  0, -2, -1,  0,  0,  0, -1,  0,  0, -2},
-                {-2, -1,  0,  0, -2, -2, -1,  0,  0, -2, -1,  0,  0, -2},
-                {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2}
-        };
-
-        //tablero = kakuro.LlenarKakuro();
-
-        kakuro.setTablero(tablero);
-
-        int [][] pistas = {
-                {0, 1   , 0, 4},
-                {0, 2   , 0, 7},
-                {0, 5   , 0, 16},
-                {0, 6   , 0, 11},
-                {0, 10  , 0, 14},
-                {0, 11  , 0, 37},
-                {1, 0   , 4, 0},
-                {1, 4   , 9, 12},
-                {1, 9   , 3, 12},
-                {2, 0   , 3, 0},
-                {2, 3   , 22, 33},
-                {2, 7   , 0, 30},
-                {2, 8   , 23, 0},
-                {2, 12  , 0, 9},
-                {3, 1   , 9, 0},
-                {3, 5   , 6, 17},
-                {3, 8   , 11, 13},
-                {4, 2   , 20, 0},
-                {4, 6   , 16, 0},
-                {4, 10  , 16, 36},
-                {5, 1   , 0, 8},
-                {5, 2   , 13, 41},
-                {5, 6   , 8, 33},
-                {5, 9   , 16, 0},
-                {5, 12  , 0, 16},
-                {6, 0   , 9, 0},
-                {6, 5   , 17, 0},
-                {6, 9   , 14, 0},
-                {7, 0   , 17, 0},
-                {7, 5   , 10, 6},
-                {7, 8   , 0, 13},
-                {7, 9   , 24, 26},
-                {8, 1   , 13, 13},
-                {8, 4   , 7, 0},
-                {8, 7   , 13, 0},
-                {9, 0   , 15, 0},
-                {9, 3   , 0, 20},
-                {9, 4   , 11, 4},
-                {9, 7   , 20, 23},
-                {9, 11  , 0, 11},
-                {10, 0  , 26, 0},
-                {10, 5  , 17, 0},
-                {10, 8  , 19, 5},
-                {10, 12 , 0, 6},
-                {11, 1  , 9, 0},
-                {11, 6  , 17, 0},
-                {11, 10 , 11, 0},
-                {12, 1  , 16, 0},
-                {12, 6  , 8, 0},
-                {12, 10 , 4, 0},
-        };
-        for (int[] cuarteto : pistas) {
-            kakuro.ingresarPista(cuarteto[0], cuarteto[1], cuarteto[2], cuarteto[3]);
-        }
-
-    }
-
-    /*·········································································*/
-
 
 }
