@@ -1,6 +1,5 @@
 package Logica;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.ArrayList;
@@ -68,6 +67,7 @@ public class Kakuro implements Serializable {
      * También inicia variables requeridas para el BT
      */
     public void resolverKakuro() {
+        clearKakuro();
         timeStart = System.nanoTime();
         casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
         totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
@@ -104,12 +104,14 @@ public class Kakuro implements Serializable {
     /**
      * Función encargada de crear el primer hilo para crear una solución paralelizada por hilos
      */
-    public void resolverKakuroParalelo() {
+    public void resolverKakuroParalelo(int topeHilos) {
+        clearKakuro();
+        HiloSolucionador.clearHilo();
         casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
         totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
-        Hilo hilo = new Hilo(tablero, 0);
-        hilo.setTopeHilos(2);
-        hilo.setKakuro(this);
+        HiloSolucionador hilo = new HiloSolucionador(tablero, 0);
+        HiloSolucionador.setTopeHilos(topeHilos);
+        HiloSolucionador.setKakuro(this);
         hilo.setTimeStart(System.nanoTime());
         hilo.start();
     }
@@ -169,7 +171,7 @@ public class Kakuro implements Serializable {
      * @param columna Columna donde se encuentra la columna
      * @return se retorna un SetHash con los valores que pueden ser colocados en esa casilla
      */
-    protected HashSet<Integer> obtenerSucesores(int fila, int columna, int[][] tablero) {
+    HashSet<Integer> obtenerSucesores(int fila, int columna, int[][] tablero) {
         HashSet<Integer> values;
 
         int[] pistas = getPistas(fila, columna, tablero);                                                                        //Obtengo la posición de las pistas en el tablero
@@ -411,10 +413,11 @@ public class Kakuro implements Serializable {
     public void guardarKakuro(String path) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+            clearKakuro();
             oos.writeObject(this);
             oos.close();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Archivo no encontrado");
+            e.printStackTrace();
         }
     }
 
@@ -431,9 +434,9 @@ public class Kakuro implements Serializable {
                 this.setPista(((Kakuro) aux).getPista());
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Archivo no encontrado");
+            e.printStackTrace();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Archivo incorrecto o corrupto");
+            e.printStackTrace();
         }
     }
 
@@ -460,6 +463,32 @@ public class Kakuro implements Serializable {
     int getTotalCasillas() {
         return totalCasillas;
     }
+
+    /**
+     * Método que limpia el tablero y reinicia valores relacionados para la solución del kakuro
+     */
+    public void clearKakuro() {
+        clearTablero();
+        casillas = new ArrayList<>();
+        totalCasillas = 0;
+        solucion = false;
+        totalTime = timeEnd = timeStart = 0;
+        tiempos = new ArrayList<>();
+        casillasColocadas = new ArrayList<>();
+    }
+
+    /**
+     * Método que coloca en 0 de nuevo las casillas por resolver
+     */
+    private void clearTablero() {
+        for (int i = 1; i < 14; i++) {
+            for (int j = 1; j < 14; j++) {
+                if (tablero[i][j] > -1)
+                    tablero[i][j] = 0;
+            }
+        }
+    }
+
 
     /**
     //                          *

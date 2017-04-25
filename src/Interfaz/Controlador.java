@@ -8,6 +8,7 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -88,7 +90,11 @@ public class Controlador implements Initializable {
     }
 
     private void resolverThread() {
-        kakuro.resolverKakuroParalelo();
+        int cantidadHilos = inputDialog();
+        if (cantidadHilos != 0){
+            kakuro.resolverKakuroParalelo(cantidadHilos);
+
+        }
     }
 
     private void resolver() {
@@ -98,7 +104,6 @@ public class Controlador implements Initializable {
         time /= 1000;
         //tiempo.setText("Tiempo total: \n" + time + " milisegundos");
         System.out.println(time);
-        resolver.setDisable(true);
     }
 
     private void saveKakuro() {
@@ -132,6 +137,7 @@ public class Controlador implements Initializable {
     private void construirTablero() {
         tablero.getChildren().clear();
         clearLines();
+        lines = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
             for (int j = 0; j < 14; j++){
                 tablero.add(construirCasilla(i, j), j, i);
@@ -218,6 +224,31 @@ public class Controlador implements Initializable {
         for (Group linea : lines) {
             panel.getChildren().add(linea);
         }
+    }
+
+    private int inputDialog() {
+        boolean flag = true;
+
+        while (flag) {
+            try {
+                TextInputDialog inputDialog = new TextInputDialog();
+                inputDialog.setTitle("Configurar cantidad de hilos");
+                inputDialog.setHeaderText("Ingrese la cantidad de hilos:");
+                Optional<String> valor = inputDialog.showAndWait();
+                if (valor.isPresent()) {
+                    int dato = Integer.parseInt(valor.get());
+                    if (dato < 1){
+                        continue;
+                    }
+                    return dato;
+                } else {
+                    flag = false;
+                }
+            } catch (NumberFormatException e) {
+                flag = true;
+            }
+        }
+        return 0;
     }
 
 }

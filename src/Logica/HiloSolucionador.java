@@ -8,7 +8,7 @@ import java.util.HashSet;
  * 14 abr 2017.
  */
 
-public class Hilo extends Thread{
+public class HiloSolucionador extends Thread{
 
     private static boolean solucion = false;
     private static Kakuro kakuro;
@@ -18,7 +18,7 @@ public class Hilo extends Thread{
     private int k;
     private static long timeStart;
 
-    public Hilo(int[][] tablero, int k) {
+    HiloSolucionador(int[][] tablero, int k) {
         copiaTablero = tablero;
         this.k = k;
     }
@@ -45,7 +45,7 @@ public class Hilo extends Thread{
                 copiaTablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
                 if (hilosEnEjecucion < topeHilos){
                     hilosEnEjecucion++;
-                    new Hilo(copiaTablero(), k + 1).start();
+                    new HiloSolucionador(copiaTablero(), k + 1).start();
                 } else {
                     resolverKakuroBT(k + 1);
                 }
@@ -68,8 +68,15 @@ public class Hilo extends Thread{
         return timeStart;
     }
 
-    public void setTimeStart(long timeStart) {
-        this.timeStart = timeStart;
+    void setTimeStart(long startTime) {
+        timeStart = startTime;
+    }
+
+    public static void clearHilo() {
+        solucion = false;
+        kakuro = null;
+        topeHilos = 0;
+        hilosEnEjecucion = 1;
     }
 
     private int[][] copiaTablero() {
