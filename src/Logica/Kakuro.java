@@ -110,8 +110,8 @@ public class Kakuro implements Serializable {
         casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
         totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
         HiloSolucionador hilo = new HiloSolucionador(tablero, 0);
-        HiloSolucionador.setTopeHilos(topeHilos);
         HiloSolucionador.setKakuro(this);
+        HiloSolucionador.setTopeHilos(topeHilos);
         hilo.setTimeStart(System.nanoTime());
         hilo.start();
     }
