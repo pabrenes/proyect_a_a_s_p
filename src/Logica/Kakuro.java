@@ -21,35 +21,35 @@ public class Kakuro implements Serializable {
     private ArrayList<Long> tiempos;
     private ArrayList<Integer> casillasColocadas;
     /**
-    Pablo de aquí para arriba declara sus variables
-        ---------------+---------------
-                 ___ /^^[___              _
-               /|^+----+   |#___________//
-             ( -+ |____|   _______-----+/
-              ==_________--'            \
-                ~_|___|__~
-    Jeison de aquí para abajo declara sus variables
-    */
+     Pablo de aquí para arriba declara sus variables
+     ---------------+---------------
+     ___ /^^[___              _
+     /|^+----+   |#___________//
+     ( -+ |____|   _______-----+/
+     ==_________--'            \
+     ~_|___|__~
+     Jeison de aquí para abajo declara sus variables
+     */
     Integer[] permitidos={1,2,3,4,5,6,7,8,9};
     private List<Integer> dominio = Arrays.asList(permitidos);
     private List<Integer> numColumn = new ArrayList<>();
     private  List<Integer> numFilas = new ArrayList<>();
     private  List<Integer> valoresDisponibles = new ArrayList<>();
     private int[][] KakuroVacio = {
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
-        {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
+            {-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2},
     };
 
     /**
@@ -489,7 +489,6 @@ public class Kakuro implements Serializable {
         }
     }
 
-
     /**
     //                          *
     //                         * *
@@ -619,20 +618,9 @@ public class Kakuro implements Serializable {
         return (cantidad < 10);
     }
 
-    ;
 
-    public boolean esSolucion(int fila, int columna, int valor) {
-        List conjuntoColumna = numInComlumnas(fila, columna);
-        List conjuntoFila = numInFilas(fila, columna);
 
-        if (CantCasilasUsadasFila(fila) && CantCasilasUsadasColumna(columna)) {
 
-            if (!conjuntoColumna.contains(valor) && !conjuntoFila.contains(valor))
-
-                return true;
-        }
-        return false;
-    }
 
     ;
 
@@ -643,103 +631,152 @@ public class Kakuro implements Serializable {
         copy.removeAll(conjuntoColumna);
         copy.removeAll(conjuntoFila);
         return copy;
-    }
-
-    ;
+    };
 
 
-    public void ProcesarSolucion(int fila, int columna, int valor) {
-        KakuroVacio[fila][columna] = valor;
-    }
 
-    ;
-
-
-    public int[][] LlenarKakuro() {
-        Random vaCasilla = new Random();                                         /*0=no va casilla/ 1 si va casilla */
-        Random rnd = new Random();                                               /* valor random*/
-        int valor;
-        for (int i = 1; i < 13; i++) {
-            for (int j = 1; j < 13; j++) {
-                if (vaCasilla.nextInt(20) > 2) {
-                    valor = rnd.nextInt(9) + 1;
-                    if (esSolucion(i, j, valor)) {
-                        ProcesarSolucion(i, j, valor);
-                    } else {
-                        List ConjPrometedor = ConjuntoPrometedor(i, j);
-
-                        if (!ConjPrometedor.isEmpty()) {
-                            int nuevoValor = (int) ConjPrometedor.get(0);
-                            ProcesarSolucion(i, j, nuevoValor);
-                        }
-
+/* retorna 1 -> llenar a huevo
+           0 -> aleatorio
+          -1 -> no disponible
+ */
+    public int esCasillaDisponible(int fila, int columna) {
+        if (CantCasilasUsadasFila(fila) && CantCasilasUsadasColumna(columna)) {
+            if (KakuroVacio[fila][columna - 1] < 0) { // analiza si la columna anterior es vacia
+                if (KakuroVacio[fila - 1][columna] < 0) {
+                    return 0;           // 0 indica que puede o no meter la casilla
+                } else {
+                    if (KakuroVacio[fila - 2][columna] < 0)
+                        return 1;
+                }
+            } else {
+                if (KakuroVacio[fila][columna - 2] < 0)
+                    return 1;
+                if (KakuroVacio[fila - 1][columna] < 0)
+                    return 0;           // 0 indica que puede o no meter la casilla
+                else {
+                    if (KakuroVacio[fila - 2][columna] < 0) {
+                        return 1;
                     }
                 }
             }
+            return 0;
         }
+        return -1;
+    }
 
+
+
+
+    public void ProcesarSolucion(int fila,int columna, int desicion) {
+        Random vaCasilla = new Random();                                      /*0=no va casilla/ 1 si va casilla */
+        Random rnd = new Random();                                               /* valor random*/
+        int valor;
+        switch (desicion){
+            case 1:
+                valor = rnd.nextInt(9) + 1;
+                List disponiblesFila = numInFilas(fila,columna);
+                List disponiblesColumna= numInComlumnas(fila,columna);
+                if (!disponiblesColumna.contains(valor)&& !disponiblesFila.contains(valor)){
+                    KakuroVacio[fila][columna]=valor;
+                }else{
+                 List conjPometedor =ConjuntoPrometedor(fila,columna);
+                 if (!conjPometedor.isEmpty())
+                     KakuroVacio[fila][columna]=(int) conjPometedor.get(0);
+                }break;
+
+            case 0:
+                if (rnd.nextInt(10)>5){
+                    List conjPometedor =ConjuntoPrometedor(fila,columna);
+                    if (!conjPometedor.isEmpty()){
+                        valor=(int) conjPometedor.get(0);
+                        KakuroVacio[fila][columna]=valor;}
+                }break;
+
+            default:
+                return;
+        }
+    }
+
+
+    //falta mejor considerablemente esta funcion  -.-
+    public int[][] LlenarKakuro() {
+        int valor;
+        for (int i = 1; i < 13; i++) {
+            for (int j = 1; j < 13; j++) {
+                valor=esCasillaDisponible(i,j);
+                ProcesarSolucion(i,j,valor);
+            }
+        }
+        GenerarPistas();
         return KakuroVacio;
     }
 
-    ;
 
-
-    public void generarCuartetosHorizontales() {
-        int posicion = 0;
+    public int  sumaAbajo(int fila, int columna) {
         int suma = 0;
-        int columna = 1;
-        for (int i = 1; i < 13; i++) {
-            while (columna < 14) {
-                if (KakuroVacio[i][columna] > 0)
-                    suma += KakuroVacio[i][columna];
-                else {
-                    if (KakuroVacio[i][columna - 1] != -2) {
-                        KakuroVacio[i][posicion] = -1;
-
-                        posicion = columna;
-                        suma = 0;
-                    } else posicion = columna;
-                }
-
-                columna++;
-            }
-
-            posicion = 0;
-            columna = 1;
+        for (int i = fila; i < 14; i++) {
+            if (KakuroVacio[i][columna]>0) {
+                suma+=KakuroVacio[i][columna];
+            }else
+                return suma;
         }
+        return suma;
     }
 
-    ;
-
-
-    public void generarCuartetosVerticales() {
-        int posicion = 0;
+    public int sumaDerecha(int fila, int columna) {
         int suma = 0;
-        int fila = 1;
-        for (int j = 1; j < 14; j++) {
-            while (fila < 14) {
+        for (int j = columna; j < 14; j++) {
+            if (KakuroVacio[fila][j] >0) {
+                suma+=KakuroVacio[fila][j];
+            }else
+                return suma;
 
-                if (KakuroVacio[fila][j] > 0)
-                    suma += KakuroVacio[fila][j];
-
-                else {
-                    if (KakuroVacio[fila - 1][j] > 0) {
-                        KakuroVacio[posicion][j] = -1;
-
-                        ingresarPista(posicion, j, getPista()[posicion][j].getDerecha(), suma);
-                        posicion = fila;
-                        suma = 0;
-                    } else posicion = fila;
-                }
-
-                fila++;
-            }
-            ingresarPista(posicion, j, getPista()[posicion][j].getDerecha(), suma);
-            posicion = 0;
-            fila = 1;
         }
+        return suma;
     }
 
+
+    public void GenerarPistas(){
+        int abajo;
+        int derecha;
+        for (int i = 0; i <13 ; i++) {
+            for (int j = 0; j <13; j++) {
+                if(KakuroVacio[i][j]<0){ // si la casilla esta vacia
+                    if (KakuroVacio[i+1][j]>0 && KakuroVacio[i][j+1]>0){
+                        abajo=sumaAbajo(i+1,j);
+                        derecha=sumaDerecha(i,j+1);
+                        ingresarPista(i,j,derecha,abajo);
+                        KakuroVacio[i][j]=-1;
+
+                    }else {
+                        if (KakuroVacio[i][j+1]>0){
+                            derecha=sumaDerecha(i,j+1);
+                            ingresarPista(i,j,derecha,0);
+                            KakuroVacio[i][j]=-1;
+                        }else {
+                            if (KakuroVacio[i+1][j]>0){
+                                abajo=sumaAbajo(i+1,j);
+                                ingresarPista(i,j,0,abajo);
+                                KakuroVacio[i][j]=-1;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        normalizarTablero();
+    }
+
+    public void normalizarTablero(){
+        for (int i = 1; i <13; i++) {
+            for (int j = 1; j <13 ; j++) {
+                if (KakuroVacio[i][j]>0)
+                    KakuroVacio[i][j]=0;
+            }
+
+        }
+    }
 
 
 };

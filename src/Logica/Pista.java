@@ -9,7 +9,6 @@ import java.io.Serializable;
  */
 
 public class Pista implements Serializable {
-
     private int derecha;
     private int abajo;
 
