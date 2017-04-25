@@ -86,4 +86,8 @@ public class HiloSolucionador extends Thread{
         }
         return copia;
     }
+
+    public static boolean isSolucion() {
+        return solucion;
+    }
 }

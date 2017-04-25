@@ -1,5 +1,7 @@
 package Interfaz;
 
+import Logica.HiloGrafico;
+import Logica.HiloSolucionador;
 import Logica.Kakuro;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -91,11 +93,18 @@ public class Controlador implements Initializable {
     private void resolverThread() {
         int cantidadHilos = inputDialog();
         if (cantidadHilos != 0){
+            HiloGrafico thread = new HiloGrafico(this);
+            thread.start();
             kakuro.resolverKakuroParalelo(cantidadHilos);
-
+            try {
+                thread.join();
+                construirTablero();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
-
+    // todo ARCHIVOS DE LOG PARA DEBUGEAR MEJOR DATOS PARA PYTHON
     private void generar() {
         kakuro = new Kakuro();
         kakuro.setTablero(kakuro.LlenarKakuro());
@@ -140,7 +149,7 @@ public class Controlador implements Initializable {
         );
     }
 
-    private void construirTablero() {
+    public void construirTablero() {
         tablero.getChildren().clear();
         clearLines();
         lines = new ArrayList<>();

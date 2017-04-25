@@ -647,7 +647,7 @@ public class Kakuro implements Serializable {
                 }
                 break;
             case 0:
-                if (rnd.nextInt(19)>5){
+                if (rnd.nextInt(11)>5){
                     List conjPometedor =ConjuntoPrometedor(fila,columna);
                     if (!conjPometedor.isEmpty()){
                         valor=(int) conjPometedor.get(0);
