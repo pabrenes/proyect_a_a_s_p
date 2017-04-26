@@ -18,6 +18,7 @@ public class Main extends Application{
         Parent root = FXMLLoader.load(getClass().getResource("Interfaz.fxml"));
         primaryStage.setTitle("Kakuros");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

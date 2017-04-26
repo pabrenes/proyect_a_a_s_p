@@ -93,7 +93,7 @@ public class Controlador implements Initializable {
     private void resolverThread() {
         int cantidadHilos = inputDialog();
         if (cantidadHilos != 0){
-            HiloGrafico thread = new HiloGrafico(this);
+            HiloGrafico thread = new HiloGrafico();
             thread.start();
             kakuro.resolverKakuroParalelo(cantidadHilos);
             try {
@@ -109,7 +109,6 @@ public class Controlador implements Initializable {
         kakuro = new Kakuro();
         kakuro.setTablero(kakuro.LlenarKakuro());
         construirTablero();
-        System.gc();
     }
 
     private void resolver() {

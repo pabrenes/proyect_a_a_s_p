@@ -8,10 +8,7 @@ import Interfaz.Controlador;
  */
 public class HiloGrafico extends Thread{
 
-    Controlador control;
-
-    public HiloGrafico(Controlador control) {
-        this.control = control;
+    public HiloGrafico() {
     }
 
     @Override
