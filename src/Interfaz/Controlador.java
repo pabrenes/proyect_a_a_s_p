@@ -102,6 +102,7 @@ public class Controlador implements Initializable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.gc();
         }
     }
     // todo ARCHIVOS DE LOG PARA DEBUGEAR MEJOR DATOS PARA PYTHON
@@ -118,6 +119,7 @@ public class Controlador implements Initializable {
         time /= 1000;
         //tiempo.setText("Tiempo total: \n" + time + " milisegundos");
         System.out.println(time);
+        System.gc();
     }
 
     private void saveKakuro() {
