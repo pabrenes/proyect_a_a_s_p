@@ -102,7 +102,6 @@ public class Controlador implements Initializable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.gc();
         }
     }
     // todo ARCHIVOS DE LOG PARA DEBUGEAR MEJOR DATOS PARA PYTHON

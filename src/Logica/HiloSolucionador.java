@@ -1,6 +1,6 @@
 package Logica;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 /**
  * Created by   Pablo Brenes    - 2016250460
@@ -39,7 +39,7 @@ public class HiloSolucionador extends Thread{
         }
         else {
             int[] parOrdenado = kakuro.getCasillas().get(k);
-            HashSet<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
+            ArrayList<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
             for (Integer sucesor : sucesores) {
                 copiaTablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
                 if (hilosEnEjecucion < topeHilos){

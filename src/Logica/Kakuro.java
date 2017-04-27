@@ -20,6 +20,7 @@ public class Kakuro implements Serializable {
     private long totalTime, timeEnd, timeStart;
     private ArrayList<Long> tiempos;
     private ArrayList<Integer> casillasColocadas;
+    private static final long serialVersionUID = 2088887813192688127L;
     /**
      Pablo de aquí para arriba declara sus variables
      ---------------+---------------
@@ -118,7 +119,7 @@ public class Kakuro implements Serializable {
         }
         else {                                                                                                          //Aún no hay solución
             int[] parOrdenado = casillas.get(k);                                                                        //Obtengo los pares ordenados a trabajar según el k
-            HashSet<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1], tablero);                     //Obtengo los sucesores para esa casilla
+            ArrayList<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1], tablero);                   //Obtengo los sucesores para esa casilla
             //Una desición erronea tomada anteriormente genera que no encuentre valores posibles para que el kakuro obtenga una solución
             //Sucesores puede ser generada de manera vacía, lo que indica que atrás hubo un valor no correcto
             //Por lo que simplemente no intenta realizar nuevas conmparaciones y regresa para enmendar el error
@@ -161,7 +162,7 @@ public class Kakuro implements Serializable {
      * @param columna Columna donde se encuentra la columna
      * @return se retorna un SetHash con los valores que pueden ser colocados en esa casilla
      */
-    HashSet<Integer> obtenerSucesores(int fila, int columna, int[][] tablero) {
+    ArrayList<Integer> obtenerSucesores(int fila, int columna, int[][] tablero) {
         HashSet<Integer> values;
 
         int[] pistas = getPistas(fila, columna, tablero);                                                                        //Obtengo la posición de las pistas en el tablero
@@ -195,7 +196,7 @@ public class Kakuro implements Serializable {
         values.removeAll(runs[0]);                                                                                      //Elimino repetidos horizontalmente
         values.removeAll(runs[1]);                                                                                      //Elimino repetidos verticalmente
 
-        return values;
+        return new ArrayList<>(values);
     }
 
     /**
