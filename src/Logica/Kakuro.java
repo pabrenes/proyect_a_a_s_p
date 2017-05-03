@@ -1,6 +1,8 @@
 package Logica;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.ArrayList;
 
@@ -18,24 +20,25 @@ public class Kakuro implements Serializable {
     private int totalCasillas;
     private boolean solucion;
     private long totalTime, timeEnd, timeStart;
+    private PrintWriter outK, outT;
     private ArrayList<Long> tiempos;
     private ArrayList<Integer> casillasColocadas;
     private static final long serialVersionUID = 2088887813192688127L;
     /**
      Pablo de aquí para arriba declara sus variables
      ---------------+---------------
-     ___ /^^[___              _
-     /|^+----+   |#___________//
-     ( -+ |____|   _______-----+/
-     ==_________--'            \
-     ~_|___|__~
+              ___ /^^[___              _
+            /|^+----+   |#___________//
+          ( -+ |____|   _______-----+/
+           ==_________--'            \
+            ~_|___|__~
      Jeison de aquí para abajo declara sus variables
      */
     Integer[] permitidos={1,2,3,4,5,6,7,8,9};
     private List<Integer> dominio = Arrays.asList(permitidos);
     private List<Integer> numColumn = new ArrayList<>();
-    private  List<Integer> numFilas = new ArrayList<>();
-    private  List<Integer> valoresDisponibles = new ArrayList<>();
+    private List<Integer> numFilas = new ArrayList<>();
+    private List<Integer> valoresDisponibles = new ArrayList<>();
     private int[][] KakuroVacio;
 
     /**
@@ -64,32 +67,13 @@ public class Kakuro implements Serializable {
         tiempos = new ArrayList<>();
         casillasColocadas = new ArrayList<>();
         solucion = false;
-        resolverKakuroBT(0);
-        totalTime = timeEnd - timeStart;
-        /*
-        for (int i = 0; i < tiempos.size(); i++) {
-            double time = (tiempos.get(i) - timeStart)/100;
-            time /= 100;
-            time /= 100;
-            System.out.println("Colocadas " + casillasColocadas.get(i) + " casillas a los: " + time + " milisegundos");
+        try {
+            initOut();
+            resolverKakuroBT(0);
+            totalTime = timeEnd - timeStart;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        */
-        /*
-        System.out.print("[");
-        for (int k : casillasColocadas ) {
-            System.out.print(k + ", ");
-        }
-        System.out.print("]");
-        System.out.println();
-        System.out.print("[");
-        for (Long time : tiempos ) {
-            double mls = (time - timeStart) / 100;
-            mls /= 100;
-            mls /= 100;
-            System.out.print(mls + ", ");
-        }
-        System.out.print("]");
-        System.out.println();*/
     }
 
     /**
@@ -97,6 +81,7 @@ public class Kakuro implements Serializable {
      */
     public void resolverKakuroParalelo(int topeHilos) {
         clearKakuro();
+        timeStart = System.nanoTime();
         HiloSolucionador.clearHilo();
         casillas = obtenerCasillas();                                                                                   //Obtener casillas recorrer el kakuro encontrando las casillas a rellenar
         totalCasillas = casillas.size();                                                                                //El tamaño indica cuando encontré mi solución
@@ -104,7 +89,12 @@ public class Kakuro implements Serializable {
         HiloSolucionador.setKakuro(this);
         HiloSolucionador.setTopeHilos(topeHilos);
         hilo.setTimeStart(System.nanoTime());
-        hilo.start();
+        try {
+            initOut();
+            hilo.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -116,17 +106,17 @@ public class Kakuro implements Serializable {
         if (k == totalCasillas) {                                                                                       //Solución encontrada
             solucion = true;
             timeEnd = System.nanoTime();
+            closeOut();
         }
         else {                                                                                                          //Aún no hay solución
             int[] parOrdenado = casillas.get(k);                                                                        //Obtengo los pares ordenados a trabajar según el k
-            ArrayList<Integer> sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1], tablero);                   //Obtengo los sucesores para esa casilla
+            int[] sucesores = obtenerSucesores(parOrdenado[0], parOrdenado[1], tablero);                                //Obtengo los sucesores para esa casilla
             //Una desición erronea tomada anteriormente genera que no encuentre valores posibles para que el kakuro obtenga una solución
             //Sucesores puede ser generada de manera vacía, lo que indica que atrás hubo un valor no correcto
             //Por lo que simplemente no intenta realizar nuevas conmparaciones y regresa para enmendar el error
-            for (Integer sucesor : sucesores) {                                                                         //Para cada sucesor explore los siguientes sucessores
+            for (int sucesor : sucesores) {                                                                             //Para cada sucesor explore los siguientes sucessores
                 tablero[parOrdenado[0]][parOrdenado[1]] = sucesor;                                                      //Agregue el posible valor al tablero
-                casillasColocadas.add(k + 1);
-                tiempos.add(System.nanoTime());
+                write(k + 1);
                 resolverKakuroBT(k + 1);                                                                             //Explore según el posible valor anterior
                 if (solucion)                                                                                           //Si ya se encontró solución, corte
                     break;
@@ -162,7 +152,7 @@ public class Kakuro implements Serializable {
      * @param columna Columna donde se encuentra la columna
      * @return se retorna un SetHash con los valores que pueden ser colocados en esa casilla
      */
-    ArrayList<Integer> obtenerSucesores(int fila, int columna, int[][] tablero) {
+    int[] obtenerSucesores(int fila, int columna, int[][] tablero) {
         HashSet<Integer> values;
 
         int[] pistas = getPistas(fila, columna, tablero);                                                                        //Obtengo la posición de las pistas en el tablero
@@ -196,7 +186,13 @@ public class Kakuro implements Serializable {
         values.removeAll(runs[0]);                                                                                      //Elimino repetidos horizontalmente
         values.removeAll(runs[1]);                                                                                      //Elimino repetidos verticalmente
 
-        return new ArrayList<>(values);
+        int[] sucesores = values.stream().mapToInt(i -> i).toArray();
+
+        values = null;
+        runs[0] = null;
+        runs[1] = null;
+
+        return sucesores;
     }
 
     /**
@@ -248,7 +244,7 @@ public class Kakuro implements Serializable {
      */
     private int[] getPistas(int fila, int columna, int[][] tablero) {
 
-        int[] pista = new int[4];                                                                                       //Contenedor de las pistas
+        int[] pista = new int[2];                                                                                       //Contenedor de las pistas
 
         for (int i = columna - 1; i > -1; i--) {                                                                        //Determino la pista horizontal
             if (tablero[fila][i] == -1) {                                                                               //La pista está donde haya un -1 más próximo
@@ -478,6 +474,26 @@ public class Kakuro implements Serializable {
                     tablero[i][j] = 0;
             }
         }
+    }
+
+    public void initOut() throws IOException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+        Date date = new Date();
+        outK = new PrintWriter(new FileWriter("K" + dateFormat.format(date) + ".txt"));
+        outT = new PrintWriter(new FileWriter("T" + dateFormat.format(date) + ".txt"));
+    }
+
+    public void closeOut() {
+        outK.close();
+        outT.close();
+    }
+
+    public void write(int k) {
+        outK.println(k);
+        double time = (System.nanoTime() - timeStart) / 100;
+        time /= 100;
+        time /= 100;
+        outT.println(time);
     }
 
     /**

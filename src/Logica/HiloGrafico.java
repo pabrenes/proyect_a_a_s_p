@@ -15,6 +15,7 @@ public class HiloGrafico extends Thread{
     public void run() {
         while (true) {
             if (HiloSolucionador.isSolucion()){
+                System.out.println(HiloSolucionador.timeEnd);
                 try {
                     sleep(1000);
                 } catch (InterruptedException e) {

@@ -1,7 +1,5 @@
 package Logica;
 
-import java.util.ArrayList;
-
 /**
  * Created by   Pablo Brenes    - 2016250460
  *              Jeison Esquivel - 2013018886
@@ -17,6 +15,7 @@ public class HiloSolucionador extends Thread{
     private int[][] copiaTablero;
     private int k;
     private static long timeStart;
+    public static double  timeEnd;
 
     HiloSolucionador(int[][] tablero, int k) {
         copiaTablero = tablero;
@@ -31,21 +30,23 @@ public class HiloSolucionador extends Thread{
 
     private void resolverKakuroBT(int k) {
         if (k == kakuro.getTotalCasillas()) {
-            kakuro.setTablero(copiaTablero);
-            double time = (System.nanoTime() - timeStart)/1000;
-            time /= 1000;
-            System.out.println(time);
+            kakuro.closeOut();
             solucion = true;
+            kakuro.setTablero(copiaTablero);
+            timeEnd = (System.nanoTime() - timeStart)/1000;
+            timeEnd /= 1000;
         }
         else {
             int[] parOrdenado = kakuro.getCasillas().get(k);
-            ArrayList<Integer> sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
-            for (Integer sucesor : sucesores) {
+            int[] sucesores = kakuro.obtenerSucesores(parOrdenado[0], parOrdenado[1], copiaTablero);
+            for (int sucesor : sucesores) {
                 copiaTablero[parOrdenado[0]][parOrdenado[1]] = sucesor;
                 if (hilosEnEjecucion < topeHilos){
                     hilosEnEjecucion++;
+                    kakuro.write(k + 1);
                     new HiloSolucionador(copiaTablero(), k + 1).start();
                 } else {
+                    kakuro.write(k + 1);
                     resolverKakuroBT(k + 1);
                 }
                 if (solucion)
