@@ -188,10 +188,6 @@ public class Kakuro implements Serializable {
 
         int[] sucesores = values.stream().mapToInt(i -> i).toArray();
 
-        values = null;
-        runs[0] = null;
-        runs[1] = null;
-
         return sucesores;
     }
 
@@ -462,6 +458,7 @@ public class Kakuro implements Serializable {
         totalTime = timeEnd = timeStart = 0;
         tiempos = new ArrayList<>();
         casillasColocadas = new ArrayList<>();
+        outT = outK = null;
     }
 
     /**
